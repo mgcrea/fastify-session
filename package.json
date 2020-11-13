@@ -8,7 +8,7 @@
   "repository": "github:mgcrea/fastify-session",
   "license": "MIT",
   "bin": {
-    "secure-session-gen-key": "lib/bin/genkey.js"
+    "session-generate-key": "lib/bin/generate-key.js"
   },
   "scripts": {
     "build": "tsc --build",
