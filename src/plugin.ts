@@ -79,6 +79,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
       return;
     }
 
+    // code: reply.statusCode
     log.debug('fastify-session: saving session and updating cookie');
     await session.save();
     reply.setCookie(cookieName, await session.toCookie(), { ...cookieOptions, ...session[kCookieOptions] });

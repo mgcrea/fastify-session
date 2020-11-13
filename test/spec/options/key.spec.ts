@@ -26,6 +26,18 @@ describe('key option', () => {
       expect(response.cookies[0].name).toEqual(DEFAULT_COOKIE_NAME);
       context.set('cookie', response.headers['set-cookie']);
     });
+    it('should receive a cookie even if no session changes are performed', async () => {
+      const response = await fastify.inject({
+        method: 'POST',
+        url: '/noop',
+        payload: context.get('payload'),
+      });
+      expect(response.statusCode).toEqual(200);
+      expect(Object.keys(response.headers)).toContain('set-cookie');
+      expect(response.headers['set-cookie']).toBeTruthy();
+      // @ts-expect-error LightMyRequest.Response.cookies
+      expect(response.cookies[0].name).toEqual(DEFAULT_COOKIE_NAME);
+    });
     it('should properly match an existing session', async () => {
       const response = await fastify.inject({
         method: 'GET',

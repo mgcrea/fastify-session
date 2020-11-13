@@ -33,10 +33,11 @@ export class Session<T extends SessionData = SessionData> {
     Session[kCookieOptions] = cookieOptions;
   }
 
-  constructor(data: Partial<T> = {}, options: CookieSerializeOptions = {}) {
-    this[kSessionData] = data;
+  constructor(data?: Partial<T>, options: CookieSerializeOptions = {}) {
+    this[kSessionData] = data || {};
     this[kCookieOptions] = options;
     this.id = Session[kSessionStore] ? nanoid() : '';
+    this.changed = !data;
     this.touch();
   }
 

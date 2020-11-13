@@ -34,6 +34,9 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
     request.session.set('update', request.body);
     reply.send('hello world');
   });
+  fastify.post('/noop', (_request, reply) => {
+    reply.send('hello world');
+  });
   const schema = {
     body: {
       type: 'object',

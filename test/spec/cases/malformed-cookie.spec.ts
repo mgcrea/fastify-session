@@ -22,6 +22,7 @@ describe('with malformed-cookie reply', () => {
     context.set('cookie', response.cookies[0]);
   });
   it('should properly fail with a malformed cookie', async () => {
+    const cookie = context.get('cookie');
     const response = await fastify.inject({
       method: 'GET',
       url: '/',
@@ -30,7 +31,8 @@ describe('with malformed-cookie reply', () => {
       },
     });
     expect(response.statusCode).toEqual(404);
-    expect(Object.keys(response.headers)).not.toContain('set-cookie');
+    expect(Object.keys(response.headers)).toContain('set-cookie');
+    expect(response.cookies[0]).not.toEqual(cookie);
   });
   it('should properly fail with a malformed nonce', async () => {
     const cookie = context.get('cookie');
@@ -42,6 +44,7 @@ describe('with malformed-cookie reply', () => {
       },
     });
     expect(response.statusCode).toEqual(404);
-    expect(Object.keys(response.headers)).not.toContain('set-cookie');
+    expect(Object.keys(response.headers)).toContain('set-cookie');
+    expect(response.cookies[0]).not.toEqual(cookie);
   });
 });
