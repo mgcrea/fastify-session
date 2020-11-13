@@ -1,4 +1,3 @@
-import { FastifyRequest } from 'fastify';
 import type { CookieSerializeOptions } from 'fastify-cookie';
 import { nanoid } from 'nanoid';
 import { decryptMessage, encryptMessage, signMessage, verifyMessage } from '../utils';
@@ -12,16 +11,16 @@ export const kSessionStore = Symbol('kSessionStore');
 
 export class Session<T extends SessionData = SessionData> {
   readonly id: string;
-  rotated: boolean = false;
-  changed: boolean = false;
-  deleted: boolean = false;
+  rotated = false;
+  changed = false;
+  deleted = false;
 
   [kSessionData]: Partial<T>;
   [kCookieOptions]: CookieSerializeOptions;
   static [kSecretKeys]: Buffer[];
   static [kSessionStore]?: SessionStore;
 
-  static configure({ secretKeys, store }: { store?: SessionStore; secretKeys: Buffer[] }) {
+  static configure({ secretKeys, store }: { store?: SessionStore; secretKeys: Buffer[] }): void {
     Session[kSecretKeys] = secretKeys;
     Session[kSessionStore] = store;
   }
@@ -44,9 +43,8 @@ export class Session<T extends SessionData = SessionData> {
   }
   private static async fromStatefulCookie(cookie: string) {
     // Stateful sessions have ids encrypted as the cookie
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { buffer: verifiedCookie, rotated } = verifyMessage(cookie, Session[kSecretKeys]);
-    // @ts-ignore-error
-    d({ verifiedCookie });
     const session = new Session();
     session.rotated = rotated;
     return session;
@@ -70,17 +68,17 @@ export class Session<T extends SessionData = SessionData> {
     return this[kSessionData][key];
   }
 
-  set<K extends keyof T = keyof T>(key: K, value: T[K]) {
+  set<K extends keyof T = keyof T>(key: K, value: T[K]): void {
     this.changed = true;
     this[kSessionData][key] = value;
   }
 
-  delete() {
+  delete(): void {
     this.changed = true;
     this.deleted = true;
   }
 
-  options(options: CookieSerializeOptions) {
+  options(options: CookieSerializeOptions): void {
     this[kCookieOptions] = options;
   }
 }
