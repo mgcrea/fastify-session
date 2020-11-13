@@ -79,7 +79,7 @@ Leveraging an external store, the session id (generated with [nanoid](https://gi
 secret-key with
 [libsodium's crytpo_auth](https://libsodium.gitbook.io/doc/secret-key_cryptography/secret-key_authentication)
 
-### Using a in memory store (not production-ready!)
+### Using a MemoryStore (useful for testing)
 
 ```ts
 import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
@@ -103,7 +103,7 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
 };
 ```
 
-### Using an external store (eg. redis)
+### Using an external store (eg. RedisStore)
 
 Using [fastify-redis-session](https://github.com/mgcrea/fastify-redis-session)
 
