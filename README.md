@@ -34,9 +34,6 @@ No external store required, the entire session data is encrypted using a secret-
 import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import fastifyCookie from 'fastify-cookie';
 import fastifySession from '@mgcrea/fastify-session';
-import Redis from 'ioredis';
-import { IS_PROD, IS_TEST, REDIS_URI, SESSION_TTL } from './config/env';
-import { RedisStore } from 'fastify-redis-session';
 
 const SESSION_KEY = 'Egb/g4RUumlD2YhWYfeDlm5MddajSjGEBhm0OW+yo9s='';
 const SESSION_TTL = 864e3; // 1 day in seconds
@@ -60,9 +57,6 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
 import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import fastifyCookie from 'fastify-cookie';
 import fastifySession from '@mgcrea/fastify-session';
-import RedisStore from '@mgcrea/fastify-session-redis-store';
-import Redis from 'ioredis';
-import { IS_PROD, IS_TEST, REDIS_URI, SESSION_TTL } from './config/env';
 
 const SESSION_TTL = 864e3; // 1 day in seconds
 
@@ -92,8 +86,6 @@ import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import fastifyCookie from 'fastify-cookie';
 import fastifySession, { MemoryStore } from '@mgcrea/fastify-session';
 import Redis from 'ioredis';
-import { IS_PROD, IS_TEST, REDIS_URI, SESSION_TTL } from './config/env';
-import { RedisStore } from 'fastify-redis-session';
 
 const SESSION_TTL = 864e3; // 1 day in seconds
 
@@ -119,10 +111,10 @@ Using [fastify-redis-session](https://github.com/mgcrea/fastify-redis-session)
 import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import fastifyCookie from 'fastify-cookie';
 import fastifySession from '@mgcrea/fastify-session';
+import RedisStore from '@mgcrea/fastify-redis-session-store';
 import Redis from 'ioredis';
-import { IS_PROD, IS_TEST, REDIS_URI, SESSION_TTL } from './config/env';
-import { RedisStore } from 'fastify-redis-session';
 
+const REDIS_URI = process.env.REDIS_URI || 'redis://localhost:6379/1';
 const SESSION_TTL = 864e3; // 1 day in seconds
 
 export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
