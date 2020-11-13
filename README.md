@@ -1,7 +1,7 @@
 # Fastify Session
 
-[![npm version](https://img.shields.io/npm/v/mgcrea/fastify-session.svg)](https://github.com/mgcrea/fastify-session/releases)
-[![license](https://img.shields.io/npm/l/mgcrea/fastify-session)](https://tldrlegal.com/license/mit-license)
+[![npm version](https://img.shields.io/npm/v/@mgcrea/fastify-session.svg)](https://github.com/mgcrea/fastify-session/releases)
+[![license](https://img.shields.io/npm/l/@mgcrea/fastify-session)](https://tldrlegal.com/license/mit-license)
 [![build status](https://img.shields.io/github/workflow/status/mgcrea/fastify-session/ci)](https://github.com/mgcrea/fastify-session/actions)
 [![dependencies status](https://img.shields.io/david/mgcrea/fastify-session)](https://david-dm.org/mgcrea/fastify-session)
 [![devDependencies status](https://img.shields.io/david/dev/mgcrea/fastify-session)](https://david-dm.org/mgcrea/fastify-session?type=dev)
