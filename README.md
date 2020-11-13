@@ -81,8 +81,8 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
 
 ### Stateful session
 
-Leveraging an external (connect-compatible) store, the session id (generated with
-[nanoid](https://github.com/ai/nanoid)) is signed using a secret-key with
+Leveraging an external store, the session id (generated with [nanoid](https://github.com/ai/nanoid)) is signed using a
+secret-key with
 [libsodium's crytpo_auth](https://libsodium.gitbook.io/doc/secret-key_cryptography/secret-key_authentication)
 
 ### Using a in memory store (not production-ready!)

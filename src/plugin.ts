@@ -1,4 +1,4 @@
-import type { FastifyPluginAsync } from 'fastify';
+import type { FastifyPluginAsync, FastifyRequest } from 'fastify';
 import type { CookieSerializeOptions } from 'fastify-cookie';
 import { kCookieOptions, Session, SessionStore } from './session';
 import './typings';
@@ -29,7 +29,17 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       sanitizeSecretKeys(key!);
 
-  Session.configure({ secretKeys, store });
+  Session.configure({ cookieOptions, secretKeys, store });
+
+  fastify.decorateRequest('session', null);
+  fastify.decorateRequest('sessionStore', store);
+  async function destroySession(this: FastifyRequest) {
+    if (!this.session) {
+      return;
+    }
+    await this.session.destroy();
+  }
+  fastify.decorateRequest('destroySession', destroySession);
 
   // decode/create a session for every request
   fastify.addHook('onRequest', async (request) => {
@@ -69,7 +79,8 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
       return;
     }
 
-    log.debug('fastify-session: setting session');
+    log.debug('fastify-session: saving session and updating cookie');
+    await session.save();
     reply.setCookie(cookieName, await session.toCookie(), { ...cookieOptions, ...session[kCookieOptions] });
   });
 };

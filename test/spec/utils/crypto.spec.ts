@@ -14,8 +14,7 @@ describe('crypto', () => {
     const result = decryptMessage(encryptedFixture, [secretKey]);
     expect(result).toBeDefined();
     expect(typeof result).toEqual('object');
-    expect(Object.keys(result)).toEqual(['success', 'buffer', 'rotated']);
-    expect(result.success).toBeTruthy();
+    expect(Object.keys(result)).toEqual(['buffer', 'rotated']);
     expect(Buffer.isBuffer(result.buffer)).toBeTruthy();
     expect(result.buffer.toString('utf8')).toEqual(JSON.stringify({ hello: 'world' }));
     expect(result.rotated).toBeFalsy();
@@ -34,8 +33,7 @@ describe('crypto', () => {
     const result = verifyMessage(signedFixture, [secretKey]);
     expect(result).toBeDefined();
     expect(typeof result).toEqual('object');
-    expect(Object.keys(result)).toEqual(['success', 'buffer', 'rotated']);
-    expect(result.success).toBeTruthy();
+    expect(Object.keys(result)).toEqual(['buffer', 'rotated']);
     expect(Buffer.isBuffer(result.buffer)).toBeTruthy();
     expect(result.buffer.toString('utf8')).toEqual(JSON.stringify({ hello: 'world' }));
     expect(result.rotated).toBeFalsy();

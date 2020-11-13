@@ -1,11 +1,8 @@
-import { FastifyLoggerInstance } from 'fastify';
-import { Session, SessionData } from '../session';
+import { Session } from '../session';
 
 declare module 'fastify' {
   interface FastifyInstance {
-    createSecureSession: <T extends SessionData = SessionData>(data: T) => Session;
-    decodeSecureSession: (cookie: string, log?: FastifyLoggerInstance) => Session | null;
-    encodeSecureSession: (session: Session) => string;
+    destroySession: () => Promise<void>;
   }
   interface FastifyRequest {
     session: Session;

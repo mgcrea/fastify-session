@@ -30,6 +30,10 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
     request.session.set('data', request.body);
     reply.send('hello world');
   });
+  fastify.post('/update', (request, reply) => {
+    request.session.set('update', request.body);
+    reply.send('hello world');
+  });
   const schema = {
     body: {
       type: 'object',
@@ -51,6 +55,9 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
     }
     reply.send(data);
   });
-
+  fastify.get('/raw', (request, reply) => {
+    const data = request.session.data;
+    reply.send(data);
+  });
   return fastify;
 };

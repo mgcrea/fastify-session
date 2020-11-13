@@ -2,10 +2,11 @@ import { EventEmitter } from 'events';
 import { SessionData } from './SessionData';
 import { SessionStore } from './SessionStore';
 
-export type MemoryStoreOptions<T> = { store?: Map<string, T>; prefix?: string };
+type StoredData<T> = [T, number | null]; // [session data, expiry time in ms]
+export type MemoryStoreOptions<T> = { store?: Map<string, StoredData<T>>; prefix?: string };
 
 export class MemoryStore<T extends SessionData = SessionData> extends EventEmitter implements SessionStore {
-  private store: Map<string, T>;
+  private store: Map<string, StoredData<T>>;
   private readonly prefix: string;
 
   constructor({ store = new Map(), prefix = 'sess:' }: MemoryStoreOptions<T> = {}) {
@@ -18,18 +19,23 @@ export class MemoryStore<T extends SessionData = SessionData> extends EventEmitt
     return `${this.prefix}${sessionId}`;
   }
 
-  set(sessionId: string, session: T, callback: (err?: Error) => void): void {
-    this.store.set(this.getKey(sessionId), session);
-    callback();
+  async set(sessionId: string, session: T, expiry: number | null = null): Promise<void> {
+    this.store.set(this.getKey(sessionId), [session, expiry]);
   }
 
-  get(sessionId: string, callback: (err?: Error, session?: T) => void): void {
-    const session = this.store.get(this.getKey(sessionId));
-    callback(undefined, session);
+  async get(sessionId: string): Promise<[T, number | null] | null> {
+    const result = this.store.get(this.getKey(sessionId)) ?? null;
+    if (!result) {
+      return null;
+    }
+    const [session, expiry] = result;
+    if (expiry && expiry > Date.now()) {
+      return null;
+    }
+    return [session, expiry];
   }
 
-  destroy(sessionId: string, callback: (err?: Error) => void): void {
+  async destroy(sessionId: string): Promise<void> {
     this.store.delete(this.getKey(sessionId));
-    callback();
   }
 }

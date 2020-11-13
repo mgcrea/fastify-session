@@ -30,10 +30,7 @@ export const encryptMessage = (message: Buffer, secretKey: Buffer, encoding: Buf
   return ciphertext.toString(encoding) + SPLIT_CHAR + nonce.toString(encoding);
 };
 
-export const decryptMessage = (
-  message: string,
-  secretKeys: Buffer[]
-): { success: boolean; buffer: Buffer; rotated: boolean } => {
+export const decryptMessage = (message: string, secretKeys: Buffer[]): { buffer: Buffer; rotated: boolean } => {
   // do not use destructuring or it will deopt
   const split = message.split(SPLIT_CHAR);
   if (split.length <= 1) {
@@ -64,7 +61,7 @@ export const decryptMessage = (
     throw createError('DecryptError', 'Unable to decrypt');
   }
 
-  return { success, buffer: success ? decrypted : Buffer.from([]), rotated };
+  return { buffer: decrypted, rotated };
 };
 
 export const signMessage = (message: Buffer, secretKey: Buffer, encoding: BufferEncoding = 'base64'): string => {
@@ -73,10 +70,7 @@ export const signMessage = (message: Buffer, secretKey: Buffer, encoding: Buffer
   return message.toString(encoding) + SPLIT_CHAR + signature.toString(encoding);
 };
 
-export const verifyMessage = (
-  message: string,
-  secretKeys: Buffer[]
-): { success: boolean; buffer: Buffer; rotated: boolean } => {
+export const verifyMessage = (message: string, secretKeys: Buffer[]): { buffer: Buffer; rotated: boolean } => {
   // do not use destructuring or it will deopt
   const split = message.split(SPLIT_CHAR);
   if (split.length <= 1) {
@@ -100,5 +94,5 @@ export const verifyMessage = (
     throw createError('VerifyError', 'Unable to verify');
   }
 
-  return { success, buffer: success ? cleartext : Buffer.from([]), rotated };
+  return { buffer: cleartext, rotated };
 };
