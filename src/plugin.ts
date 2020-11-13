@@ -4,7 +4,7 @@ import { kCookieOptions, Session, SessionStore } from './session';
 import './typings';
 import { asBuffer, buildKeyFromSecretAndSalt, sanitizeSecretKeys } from './utils';
 
-export const DEFAULT_COOKIE_NAME = 'session';
+export const DEFAULT_COOKIE_NAME = 'Session';
 
 export type SecretKey = Buffer | string | (Buffer | string)[];
 

@@ -1,7 +1,7 @@
 import sodium from 'sodium-native';
 import { createError } from './error';
 
-const SPLIT_CHAR = ';';
+const SPLIT_CHAR = '|';
 
 export const generateNonce = (): Buffer => {
   const buffer = Buffer.allocUnsafe(sodium.crypto_secretbox_NONCEBYTES);
