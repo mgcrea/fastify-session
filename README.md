@@ -6,7 +6,7 @@
 [![dependencies status](https://img.shields.io/david/mgcrea/fastify-session)](https://david-dm.org/mgcrea/fastify-session)
 [![devDependencies status](https://img.shields.io/david/dev/mgcrea/fastify-session)](https://david-dm.org/mgcrea/fastify-session?type=dev)
 
-Session plugin for [fastify](https://github.com/fastify/fastify) that supports both stateless (without store)
+Session plugin for [fastify](https://github.com/fastify/fastify) that supports both stateless and sateful sessions.
 
 - Requires [fastify-cookie](https://github.com/fastify/fastify-cookiek) to handle cookies.
 
