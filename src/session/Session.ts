@@ -39,6 +39,7 @@ export class Session<T extends SessionData = SessionData> {
     this.id = Session[kSessionStore] ? nanoid() : '';
     this.changed = !data;
     this.touch();
+    console.dir({ expiry: this[kExpiry] });
   }
 
   // Decoding
@@ -63,7 +64,7 @@ export class Session<T extends SessionData = SessionData> {
       throw createError('SessionNotFound', 'did not found a matching session in the store');
     }
     const [data, expiry] = result;
-    if (expiry && expiry > Date.now()) {
+    if (expiry && expiry <= Date.now()) {
       throw createError('ExpiredSession', 'the store returned an expired session');
     }
     const session = new Session(data, { expires: expiry ? new Date(expiry) : undefined });
@@ -88,9 +89,9 @@ export class Session<T extends SessionData = SessionData> {
     if (!Session[kSessionStore]) {
       return;
     }
-    const { maxAge, expires } = this[kCookieOptions];
+    const { maxAge = Session[kCookieOptions].maxAge, expires = Session[kCookieOptions].expires } = this[kCookieOptions];
     if (maxAge) {
-      const expiry = Date.now() + maxAge;
+      const expiry = Date.now() + maxAge * 1000;
       // Get the shortest lifespan between "expires" and "maxAge"
       this[kExpiry] = expires ? Math.min(expires.getTime(), expiry) : expiry;
       return;

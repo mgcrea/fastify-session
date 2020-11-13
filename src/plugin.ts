@@ -51,6 +51,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
       return;
     }
     try {
+      log.debug('fastify-session: found an existing cookie, attempting to decode session');
       request.session = await Session.fromCookie(cookie);
       return;
     } catch (err) {
