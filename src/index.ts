@@ -5,6 +5,6 @@ export { FastifySessionOptions } from './plugin';
 export { Session, SessionData } from './session';
 
 export default fastifyPlugin(plugin, {
-  fastify: '4.x',
+  fastify: '3.x',
   name: 'fastify-session',
 });
