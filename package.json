@@ -1,0 +1,49 @@
+{
+  "name": "@mgcrea/fastify-session",
+  "version": "1.0.0",
+  "description": "Session plugin for fastify written in TypeScript supporting both stateless and stateful sessions",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "author": "Olivier Louvignes <olivier@mgcrea.io>",
+  "repository": "github:mgcrea/fastify-session",
+  "license": "MIT",
+  "bin": {
+    "secure-session-gen-key": "lib/bin/genkey.js"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "test": "jest",
+    "typecheck": "tsc --noEmit",
+    "prettycheck": "prettier --check 'src/' --check 'test/'",
+    "lint": "eslint src/ test/"
+  },
+  "keywords": [
+    "fastify",
+    "secure",
+    "session",
+    "sodium"
+  ],
+  "devDependencies": {
+    "@tsconfig/node10": "^1.0.7",
+    "@types/node": "^14.14.7",
+    "@types/sodium-native": "^2.3.5",
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
+    "@typescript-eslint/parser": "^4.7.0",
+    "eslint": "^7.13.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-jest": "^24.1.3",
+    "eslint-plugin-prettier": "^3.1.4",
+    "fastify": "^3.8.0",
+    "fastify-cookie": "^4.1.0",
+    "jest": "^26.6.3",
+    "pino-pretty": "^4.3.0",
+    "prettier": "^2.1.2",
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "fastify-plugin": "^3.0.0",
+    "nanoid": "^3.1.16",
+    "sodium-native": "^3.2.0"
+  }
+}
