@@ -16,6 +16,7 @@ export type SessionOptions = { cookieOptions?: CookieSerializeOptions; store?: S
 
 export class Session<T extends SessionData = SessionData> {
   readonly id: string;
+  created = false;
   rotated = false;
   changed = false;
   deleted = false;
@@ -37,9 +38,8 @@ export class Session<T extends SessionData = SessionData> {
     this[kSessionData] = data || {};
     this[kCookieOptions] = options;
     this.id = Session[kSessionStore] ? nanoid() : '';
-    this.changed = !data;
+    this.created = !data;
     this.touch();
-    console.dir({ expiry: this[kExpiry] });
   }
 
   // Decoding

@@ -46,13 +46,14 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     const { cookies, log } = request;
     const cookie = cookies[cookieName];
     if (!cookie) {
-      log.debug('fastify-session: there is no cookie, creating an empty session');
+      log.debug('fastify-session/onRequest: there is no cookie, creating an empty session');
       request.session = new Session();
       return;
     }
     try {
       log.debug('fastify-session: found an existing cookie, attempting to decode session');
       request.session = await Session.fromCookie(cookie);
+      log.debug('fastify-session: session successfully decoded');
       return;
     } catch (err) {
       log.debug(`fastify-session: decoding error: ${err.message}, creating an empty session`);
@@ -65,9 +66,11 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
   fastify.addHook('onSend', async (request, reply) => {
     const { log, session } = request;
 
-    if (!session || (!session.changed && !session.rotated)) {
-      // nothing to do
-      log.debug("fastify-session: there is no session or the session didn't change, leaving it as is");
+    if (!session) {
+      log.debug('fastify-session: there is no session, leaving it as is');
+      return;
+    } else if (!session.changed && !session.created && !session.rotated) {
+      log.debug('fastify-session: the existing session was not changed, leaving it as is');
       return;
     } else if (session.deleted) {
       log.debug('fastify-session: deleting session');
@@ -81,8 +84,10 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     }
 
     // code: reply.statusCode
-    log.debug('fastify-session: saving session and updating cookie');
-    await session.save();
+    if (session.created || session.changed) {
+      log.debug('fastify-session: saving session');
+      await session.save();
+    }
     reply.setCookie(cookieName, await session.toCookie(), { ...cookieOptions, ...session[kCookieOptions] });
   });
 };

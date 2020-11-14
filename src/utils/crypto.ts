@@ -1,7 +1,7 @@
 import sodium from 'sodium-native';
 import { createError } from './error';
 
-const SPLIT_CHAR = '|';
+export const CRYPTO_SPLIT_CHAR = ';';
 
 export const generateNonce = (): Buffer => {
   const buffer = Buffer.allocUnsafe(sodium.crypto_secretbox_NONCEBYTES);
@@ -27,12 +27,12 @@ export const encryptMessage = (message: Buffer, secretKey: Buffer, encoding: Buf
   const ciphertext = Buffer.allocUnsafe(message.length + sodium.crypto_secretbox_MACBYTES);
   sodium.crypto_secretbox_easy(ciphertext, message, nonce, secretKey);
 
-  return ciphertext.toString(encoding) + SPLIT_CHAR + nonce.toString(encoding);
+  return ciphertext.toString(encoding) + CRYPTO_SPLIT_CHAR + nonce.toString(encoding);
 };
 
 export const decryptMessage = (message: string, secretKeys: Buffer[]): { buffer: Buffer; rotated: boolean } => {
   // do not use destructuring or it will deopt
-  const split = message.split(SPLIT_CHAR);
+  const split = message.split(CRYPTO_SPLIT_CHAR);
   if (split.length <= 1) {
     throw createError('MalformedMessageError', 'The message is malformed');
   }
@@ -67,12 +67,12 @@ export const decryptMessage = (message: string, secretKeys: Buffer[]): { buffer:
 export const signMessage = (message: Buffer, secretKey: Buffer, encoding: BufferEncoding = 'base64'): string => {
   const signature = Buffer.allocUnsafe(sodium.crypto_auth_BYTES);
   sodium.crypto_auth(signature, message, secretKey);
-  return message.toString(encoding) + SPLIT_CHAR + signature.toString(encoding);
+  return message.toString(encoding) + CRYPTO_SPLIT_CHAR + signature.toString(encoding);
 };
 
 export const verifyMessage = (message: string, secretKeys: Buffer[]): { buffer: Buffer; rotated: boolean } => {
   // do not use destructuring or it will deopt
-  const split = message.split(SPLIT_CHAR);
+  const split = message.split(CRYPTO_SPLIT_CHAR);
   if (split.length <= 1) {
     throw createError('MalformedMessageError', 'The message is malformed');
   }

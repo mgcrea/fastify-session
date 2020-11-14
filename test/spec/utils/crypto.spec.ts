@@ -1,4 +1,4 @@
-import { decryptMessage, encryptMessage, signMessage, verifyMessage } from 'src/utils/crypto';
+import { CRYPTO_SPLIT_CHAR, decryptMessage, encryptMessage, signMessage, verifyMessage } from 'src/utils/crypto';
 import { secretKey, encryptedFixture, signedFixture } from 'test/fixtures';
 
 describe('crypto', () => {
@@ -8,7 +8,7 @@ describe('crypto', () => {
     expect(encrypted).toBeDefined();
     expect(typeof encrypted).toEqual('string');
     expect(encrypted.length).toEqual(77);
-    expect(encrypted.split(';').length).toEqual(2);
+    expect(encrypted.split(CRYPTO_SPLIT_CHAR).length).toEqual(2);
   });
   it('should properly decrypt an encrypted message', async () => {
     const result = decryptMessage(encryptedFixture, [secretKey]);
@@ -26,7 +26,7 @@ describe('crypto', () => {
     expect(signed).toBeDefined();
     expect(typeof signed).toEqual('string');
     expect(signed.length).toEqual(69);
-    expect(signed.split(';').length).toEqual(2);
+    expect(signed.split(CRYPTO_SPLIT_CHAR).length).toEqual(2);
   });
 
   it('should properly verify a signed message', async () => {
