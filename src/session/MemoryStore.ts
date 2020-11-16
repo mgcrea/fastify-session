@@ -29,7 +29,7 @@ export class MemoryStore<T extends SessionData = SessionData> extends EventEmitt
       return null;
     }
     const [session, expiry] = result;
-    if (expiry && expiry > Date.now()) {
+    if (expiry && expiry <= Date.now()) {
       return null;
     }
     return [session, expiry];
@@ -37,5 +37,12 @@ export class MemoryStore<T extends SessionData = SessionData> extends EventEmitt
 
   async destroy(sessionId: string): Promise<void> {
     this.store.delete(this.getKey(sessionId));
+  }
+
+  async all(): Promise<{ [sid: string]: SessionData }> {
+    return [...this.store.entries()].reduce<{ [sid: string]: SessionData }>((soFar, [k, v]) => {
+      soFar[k] = v[0];
+      return soFar;
+    }, {});
   }
 }
