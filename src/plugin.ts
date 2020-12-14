@@ -5,6 +5,7 @@ import './typings';
 import { asBuffer, buildKeyFromSecretAndSalt, sanitizeSecretKeys } from './utils';
 
 export const DEFAULT_COOKIE_NAME = 'Session';
+export const DEFAULT_COOKIE_PATH = '/';
 
 export type SecretKey = Buffer | string | (Buffer | string)[];
 
@@ -37,6 +38,10 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     ? [buildKeyFromSecretAndSalt(asBuffer(secret), salt ? asBuffer(salt, 'base64') : undefined)]
     : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       sanitizeSecretKeys(key!);
+
+  if (!cookieOptions.path) {
+    cookieOptions.path = DEFAULT_COOKIE_PATH;
+  }
 
   Session.configure({ cookieOptions, secretKeys, store });
 
