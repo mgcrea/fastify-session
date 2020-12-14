@@ -15,10 +15,19 @@ export type FastifySessionOptions = {
   cookieName?: string;
   cookie?: CookieSerializeOptions;
   store?: SessionStore;
+  saveUninitialized?: boolean;
 };
 
 export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify, options): Promise<void> => {
-  const { key, secret, salt, cookieName = DEFAULT_COOKIE_NAME, cookie: cookieOptions = {}, store } = options;
+  const {
+    key,
+    secret,
+    salt,
+    cookieName = DEFAULT_COOKIE_NAME,
+    cookie: cookieOptions = {},
+    store,
+    saveUninitialized = true,
+  } = options;
 
   if (!key && !secret) {
     throw new Error('key or secret must specified');
@@ -68,6 +77,9 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
 
     if (!session) {
       log.debug('fastify-session: there is no session, leaving it as is');
+      return;
+    } else if (!saveUninitialized && !Object.keys(session.data).length) {
+      log.debug('fastify-session: session is empty and !saveUninitialized, leaving it as is');
       return;
     } else if (!session.changed && !session.created && !session.rotated) {
       log.debug('fastify-session: the existing session was not changed, leaving it as is');

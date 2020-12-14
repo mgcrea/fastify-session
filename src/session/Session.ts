@@ -11,8 +11,13 @@ export const kCookieOptions = Symbol('kCookieOptions');
 export const kExpiry = Symbol('kExpiry');
 export const kSecretKeys = Symbol('kSecretKeys');
 export const kSessionStore = Symbol('kSessionStore');
+export const kOtherOptions = Symbol('kOtherOptions');
 
-export type SessionOptions = { cookieOptions?: CookieSerializeOptions; store?: SessionStore; secretKeys: Buffer[] };
+export type SessionOptions = {
+  cookieOptions?: CookieSerializeOptions;
+  store?: SessionStore;
+  secretKeys: Buffer[];
+};
 
 export class Session<T extends SessionData = SessionData> {
   readonly id: string;
