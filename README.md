@@ -36,7 +36,7 @@ import fastifyCookie from 'fastify-cookie';
 import fastifySession from '@mgcrea/fastify-session';
 
 const SESSION_KEY = 'Egb/g4RUumlD2YhWYfeDlm5MddajSjGEBhm0OW+yo9s='';
-const SESSION_TTL = 864e3; // 1 day in seconds
+const SESSION_TTL = 864e3; // 10 days in seconds
 
 export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
   const fastify = createFastify(options);
@@ -58,7 +58,7 @@ import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import fastifyCookie from 'fastify-cookie';
 import fastifySession from '@mgcrea/fastify-session';
 
-const SESSION_TTL = 864e3; // 1 day in seconds
+const SESSION_TTL = 864e3; // 10 days in seconds
 
 export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
   const fastify = createFastify(options);
@@ -87,7 +87,7 @@ import fastifyCookie from 'fastify-cookie';
 import fastifySession, { MemoryStore } from '@mgcrea/fastify-session';
 import Redis from 'ioredis';
 
-const SESSION_TTL = 864e3; // 1 day in seconds
+const SESSION_TTL = 864e3; // 10 days in seconds
 
 export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
   const fastify = createFastify(options);
@@ -115,7 +115,7 @@ import RedisStore from '@mgcrea/fastify-redis-session-store';
 import Redis from 'ioredis';
 
 const REDIS_URI = process.env.REDIS_URI || 'redis://localhost:6379/1';
-const SESSION_TTL = 864e3; // 1 day in seconds
+const SESSION_TTL = 864e3; // 10 days in seconds
 
 export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
   const fastify = createFastify(options);

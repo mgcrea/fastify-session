@@ -1,4 +1,4 @@
-import type { FastifyPluginAsync, FastifyRequest } from 'fastify';
+import type { FastifyPluginAsync } from 'fastify';
 import type { CookieSerializeOptions } from 'fastify-cookie';
 import { kCookieOptions, Session, SessionStore } from './session';
 import './typings';
@@ -46,17 +46,21 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
   Session.configure({ cookieOptions, secretKeys, store });
 
   fastify.decorateRequest('session', null);
-  fastify.decorateRequest('sessionStore', store);
-  async function destroySession(this: FastifyRequest) {
-    if (!this.session) {
-      return;
-    }
-    await this.session.destroy();
-  }
-  fastify.decorateRequest('destroySession', destroySession);
+  fastify.decorateRequest('sessionStore', null);
+  fastify.decorateRequest('destroySession', null);
 
   // decode/create a session for every request
   fastify.addHook('onRequest', async (request) => {
+    request.sessionStore = store;
+
+    request.destroySession = async () => {
+      if (!request.session) {
+        return;
+      }
+
+      await request.session.destroy();
+    };
+
     const { cookies, log } = request;
     const cookie = cookies[cookieName];
     if (!cookie) {
