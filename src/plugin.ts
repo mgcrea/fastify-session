@@ -46,13 +46,17 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
   Session.configure({ cookieOptions, secretKeys, store });
 
   fastify.decorateRequest('session', null);
-  fastify.decorateRequest('sessionStore', null);
+
+  fastify.decorateRequest('sessionStore', {
+    getter() {
+      return store;
+    },
+  });
+
   fastify.decorateRequest('destroySession', null);
 
   // decode/create a session for every request
   fastify.addHook('onRequest', async (request) => {
-    request.sessionStore = store;
-
     request.destroySession = async () => {
       if (!request.session) {
         return;
