@@ -17,9 +17,10 @@ export type FastifySessionOptions = {
   cookie?: CookieSerializeOptions;
   store?: SessionStore;
   saveUninitialized?: boolean;
+  logBindings?: Record<string, unknown>;
 };
 
-export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify, options): Promise<void> => {
+export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify, options = {}): Promise<void> => {
   const {
     key,
     secret,
@@ -28,6 +29,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     cookie: cookieOptions = {},
     store,
     saveUninitialized = true,
+    logBindings = { plugin: 'fastify-session' },
   } = options;
 
   if (!key && !secret) {
@@ -57,19 +59,21 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
   // decode/create a session for every request
   fastify.addHook('onRequest', async (request) => {
     const { cookies, log } = request;
+
     const cookie = cookies[cookieName];
     if (!cookie) {
-      log.debug('fastify-session/onRequest: there is no cookie, creating an empty session');
+      log.debug(logBindings, 'There is no cookie, creating an empty session');
       request.session = new Session();
       return;
     }
     try {
-      log.debug('fastify-session: found an existing cookie, attempting to decode session');
+      log.debug(logBindings, 'Found an existing cookie, attempting to decode session');
       request.session = await Session.fromCookie(cookie);
-      log.debug('fastify-session: session successfully decoded');
+
+      log.debug(logBindings, 'Session successfully decoded');
       return;
     } catch (err) {
-      log.debug(`fastify-session: decoding error: ${err.message}, creating an empty session`);
+      log.debug(logBindings, `Decoding error: ${err.message}, creating an empty session`);
       request.session = new Session();
       return;
     }
@@ -77,19 +81,19 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
 
   // encode a cookie
   fastify.addHook('onSend', async (request, reply) => {
-    const { log, session } = request;
+    const { session, log } = request;
 
     if (!session) {
-      log.debug('fastify-session: there is no session, leaving it as is');
+      log.debug(logBindings, 'There is no session, leaving it as is');
       return;
     } else if (!saveUninitialized && !Object.keys(session.data).length) {
-      log.debug('fastify-session: session is empty and !saveUninitialized, leaving it as is');
+      log.debug(logBindings, "Session is empty and won't be saved, leaving it as is");
       return;
     } else if (!session.changed && !session.created && !session.rotated) {
-      log.debug('fastify-session: the existing session was not changed, leaving it as is');
+      log.debug(logBindings, 'The existing session was not changed, leaving it as is');
       return;
     } else if (session.deleted) {
-      log.debug('fastify-session: deleting session');
+      log.debug(logBindings, 'Deleting session');
       reply.setCookie(cookieName, '', {
         ...cookieOptions,
         ...session[kCookieOptions],
@@ -101,7 +105,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
 
     // code: reply.statusCode
     if (session.created || session.changed) {
-      log.debug('fastify-session: saving session');
+      log.debug('Saving created/changed session');
       await session.save();
     }
     reply.setCookie(cookieName, await session.toCookie(), { ...cookieOptions, ...session[kCookieOptions] });
