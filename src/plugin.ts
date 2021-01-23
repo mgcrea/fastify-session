@@ -46,7 +46,6 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
   Session.configure({ cookieOptions, secretKeys, store });
 
   fastify.decorateRequest('session', null);
-  fastify.decorateRequest('sessionStore', store);
   async function destroySession(this: FastifyRequest) {
     if (!this.session) {
       return;
