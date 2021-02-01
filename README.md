@@ -94,7 +94,8 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
 
   fastify.register(fastifyCookie);
   fastify.register(fastifySession, {
-    store: new MemoryStore(),
+    store: [new MemoryStore()],
+    crypto: [HMAC],
     secret: 'a secret with minimum length of 32 characters',
     cookie: { maxAge: SESSION_TTL },
   });
@@ -129,6 +130,34 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
 
   return fastify;
 };
+```
+
+## Benchmarks
+
+### Session crypto sealing
+
+```sh
+NODE_PATH=. y ts-node --project test/tsconfig.json test/benchmark/cryptoSeal.ts
+```
+
+```
+SODIUM_SECRETBOX#sealJson x 333,747 ops/sec ±0.62% (91 runs sampled)
+SODIUM_AUTH#sealJson x 376,300 ops/sec ±0.50% (89 runs sampled)
+HMAC#sealJson x 264,292 ops/sec ±3.13% (85 runs sampled)
+Fastest is SODIUM_AUTH#sealJson
+```
+
+### Session crypto unsealing
+
+```sh
+NODE_PATH=. y ts-node --project test/tsconfig.json test/benchmark/cryptoUnseal.ts
+```
+
+```
+SODIUM_SECRETBOX#unsealJson x 424,297 ops/sec ±0.69% (86 runs sampled)
+SODIUM_AUTH#unsealJson x 314,736 ops/sec ±0.96% (89 runs sampled)
+HMAC#unsealJson x 145,037 ops/sec ±5.67% (78 runs sampled)
+Fastest is SODIUM_SECRETBOX#unsealJson
 ```
 
 ## Authors
