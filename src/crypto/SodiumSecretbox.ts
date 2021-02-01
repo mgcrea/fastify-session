@@ -1,7 +1,7 @@
 import { BinaryToTextEncoding } from 'crypto';
 import sodium from 'sodium-native';
-import { createError, CRYPTO_SPLIT_CHAR } from 'src/utils';
-import { SessionCrypto } from './SessionCrypto';
+import { asBuffer, buildKeyFromSecretAndSalt, createError, CRYPTO_SPLIT_CHAR, sanitizeSecretKeys } from 'src/utils';
+import { SecretKey, SessionCrypto } from './SessionCrypto';
 
 export class SodiumSecretbox implements SessionCrypto {
   public readonly protocol = '/sodium_secretbox';
@@ -14,6 +14,14 @@ export class SodiumSecretbox implements SessionCrypto {
     const buffer = Buffer.allocUnsafe(sodium.crypto_secretbox_NONCEBYTES);
     sodium.randombytes_buf(buffer);
     return buffer;
+  }
+  public deriveSecretKeys(key?: SecretKey, secret?: Buffer | string, salt?: Buffer | string): Buffer[] {
+    if (key) {
+      return sanitizeSecretKeys(key);
+    } else if (secret) {
+      return [buildKeyFromSecretAndSalt(asBuffer(secret), salt ? asBuffer(salt, 'base64') : undefined)];
+    }
+    throw createError('SecretKeyDerivation', 'Failed to derive keys from options');
   }
   public sealMessage(message: Buffer, secretKey: Buffer): string {
     const nonce = this.generateNonce();

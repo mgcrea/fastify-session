@@ -1,6 +1,6 @@
 import crypto, { BinaryToTextEncoding } from 'crypto';
-import { createError, CRYPTO_SPLIT_CHAR } from 'src/utils';
-import { SessionCrypto } from './SessionCrypto';
+import { asBuffer, createError, CRYPTO_SPLIT_CHAR } from '../utils';
+import { SecretKey, SessionCrypto } from './SessionCrypto';
 
 export class Hmac implements SessionCrypto {
   public readonly protocol = '/hmac';
@@ -10,6 +10,14 @@ export class Hmac implements SessionCrypto {
   constructor(encoding: BinaryToTextEncoding = 'base64', algorithm = 'sha256') {
     this.encoding = encoding;
     this.algorithm = algorithm;
+  }
+  public deriveSecretKeys(key?: SecretKey, secret?: Buffer | string): Buffer[] {
+    if (key) {
+      return sanitizeSecretKeys(key, this.encoding);
+    } else if (secret) {
+      return [asBuffer(secret)];
+    }
+    throw createError('SecretKeyDerivation', 'Failed to derive keys from options');
   }
   public sealMessage(message: Buffer, secretKey: Buffer): string {
     return (
@@ -49,3 +57,8 @@ export class Hmac implements SessionCrypto {
 }
 
 export const HMAC = new Hmac();
+
+const sanitizeSecretKeys = (key: SecretKey, encoding: BufferEncoding = 'base64'): Buffer[] => {
+  const secretKeys: Buffer[] = Array.isArray(key) ? key.map((v) => asBuffer(v, encoding)) : [asBuffer(key, encoding)];
+  return secretKeys;
+};

@@ -1,15 +1,12 @@
 import type { FastifyPluginAsync, FastifyRequest } from 'fastify';
 import type { CookieSerializeOptions } from 'fastify-cookie';
-import { SessionCrypto } from './crypto';
+import { HMAC, SecretKey, SessionCrypto } from './crypto';
 import { kCookieOptions, Session } from './session';
 import { SessionStore } from './store';
 import './typings';
-import { asBuffer, buildKeyFromSecretAndSalt, sanitizeSecretKeys } from './utils';
 
 export const DEFAULT_COOKIE_NAME = 'Session';
 export const DEFAULT_COOKIE_PATH = '/';
-
-export type SecretKey = Buffer | string | (Buffer | string)[];
 
 export type FastifySessionOptions = {
   salt?: Buffer | string;
@@ -31,7 +28,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     cookieName = DEFAULT_COOKIE_NAME,
     cookie: cookieOptions = {},
     store,
-    crypto,
+    crypto = HMAC as SessionCrypto,
     saveUninitialized = true,
     logBindings = { plugin: 'fastify-session' },
   } = options;
@@ -39,16 +36,14 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
   if (!key && !secret) {
     throw new Error('key or secret must specified');
   }
-
-  const secretKeys: Buffer[] = secret
-    ? [buildKeyFromSecretAndSalt(asBuffer(secret), salt ? asBuffer(salt, 'base64') : undefined)]
-    : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      sanitizeSecretKeys(key!);
+  if (!crypto) {
+    throw new Error('invalid crypto specified');
+  }
 
   if (!cookieOptions.path) {
     cookieOptions.path = DEFAULT_COOKIE_PATH;
   }
-
+  const secretKeys: Buffer[] = crypto.deriveSecretKeys(key, secret, salt);
   Session.configure({ cookieOptions, secretKeys, store, crypto });
 
   fastify.decorateRequest('session', null);

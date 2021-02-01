@@ -1,9 +1,9 @@
 import sodium from 'sodium-native';
+import { SecretKey } from 'src/crypto';
 import { asBuffer, generateSalt } from '.';
-import { SecretKey } from '../plugin';
 
-export const sanitizeSecretKeys = (key: SecretKey): Buffer[] => {
-  const secretKeys: Buffer[] = Array.isArray(key) ? key.map((v) => asBuffer(v, 'base64')) : [asBuffer(key, 'base64')];
+export const sanitizeSecretKeys = (key: SecretKey, encoding: BufferEncoding = 'base64'): Buffer[] => {
+  const secretKeys: Buffer[] = Array.isArray(key) ? key.map((v) => asBuffer(v, encoding)) : [asBuffer(key, encoding)];
   if (secretKeys.some((key) => key.byteLength < sodium.crypto_secretbox_KEYBYTES)) {
     throw new Error(`key lengths must be at least ${sodium.crypto_secretbox_KEYBYTES} bytes`);
   }
