@@ -55,8 +55,12 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
 
 ### Production example (signed session with sodium stored in redis)
 
-Defaults to a volatile in-memory store for sessions (great for tests), with
-[hmac](https://nodejs.org/api/crypto.html#crypto_crypto_createhmac_algorithm_key_options) for signature.
+For better performance/security, you can use the
+[@mgcrea/fastify-session-sodium-crypto](https://github.com/mgcrea/fastify-session-sodium-crypto) addon:
+
+Leveraging an external redis store, the session id (generated with [nanoid](https://github.com/ai/nanoid)) is signed
+using a secret-key with
+[libsodium's crytpo_auth](https://libsodium.gitbook.io/doc/secret-key_cryptography/secret-key_authentication)
 
 ```ts
 import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
