@@ -136,7 +136,11 @@ export class Session<T extends SessionData = SessionData> {
     this.deleted = true;
   }
 
-  options(options: CookieSerializeOptions): void {
+  get options(): CookieSerializeOptions {
+    return this[kCookieOptions];
+  }
+
+  setOptions(options: CookieSerializeOptions): void {
     Object.assign(this[kCookieOptions], options);
   }
 }

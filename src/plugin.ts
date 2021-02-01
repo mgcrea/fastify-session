@@ -109,7 +109,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     if (session.created || session.changed) {
       log.debug(
         { ...bindings, sessionId: session.id },
-        `About to send a ${session.created ? 'created' : 'changed'} session, saving ...`
+        `About to save a ${session.created ? 'created' : 'changed'} session, saving ...`
       );
       await session.save();
       log.info(
