@@ -124,6 +124,7 @@ Heavily inspired from
   [Matteo Collina](https://github.com/mcollina)
 - [fastify-session](https://github.com/SerayaEryn/fastify-session) by [Denis Fäcke](https://github.com/SerayaEryn)
 - [express-session](https://github.com/expressjs/session) by [Douglas Wilson](https://github.com/dougwilson)
+- [cookie-signature](https://github.com/tj/node-cookie-signature) by [TJ Holowaychuk](https://github.com/tj)
 
 ## License
 
