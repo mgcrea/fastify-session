@@ -18,8 +18,7 @@
   },
   "dependencies": {
     "fastify-plugin": "^3.0.0",
-    "nanoid": "^3.1.20",
-    "sodium-native": "^3.2.0"
+    "nanoid": "^3.1.20"
   },
   "devDependencies": {
     "@mgcrea/fastify-session-redis-store": "^0.9.1",

@@ -10,7 +10,11 @@ Session plugin for [fastify](https://github.com/fastify/fastify) that supports b
 
 - Requires [fastify-cookie](https://github.com/fastify/fastify-cookiek) to handle cookies.
 
-- Relies on [sodium-native](https://github.com/sodium-friends/sodium-native) to perform crypto.
+- Can leverage crypto addons like
+  [@mgcrea/fastify-session-sodium-crypto](https://github.com/mgcrea/fastify-session-sodium-crypto) to perform crypto.
+
+- Can leverage store addons like
+  [@mgcrea/fastify-session-redis-store](https://github.com/mgcrea/fastify-session-redis-store) to store sessions.
 
 - Built with [TypeScript](https://www.typescriptlang.org/) for static type checking with exported types along the
   library.
@@ -23,20 +27,46 @@ npm install fastify-cookie @mgcrea/fastify-session --save
 yarn add fastify-cookie @mgcrea/fastify-session
 ```
 
-### Stateless session
+### Basic example (signed session with hmac stored in a volatile in-memory store)
 
-No external store required, the entire session data is encrypted using a secret-key with
-[libsodium's crypto_secretbox_easy](https://libsodium.gitbook.io/doc/secret-key_cryptography/secretbox)
-
-### Using a key (recommended)
+Defaults to a volatile in-memory store for sessions (great for tests), with
+[hmac](https://nodejs.org/api/crypto.html#crypto_crypto_createhmac_algorithm_key_options) for signature.
 
 ```ts
 import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import fastifyCookie from 'fastify-cookie';
 import fastifySession from '@mgcrea/fastify-session';
 
+const SESSION_SECRET = 'a secret with minimum length of 32 characters';
+const SESSION_TTL = 864e3; // 1 day in seconds
+
+export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
+  const fastify = createFastify(options);
+
+  fastify.register(fastifyCookie);
+  fastify.register(fastifySession, {
+    secret: SESSION_SECRET,
+    cookie: { maxAge: SESSION_TTL },
+  });
+
+  return fastify;
+};
+```
+
+### Production example (signed session with sodium stored in redis)
+
+Defaults to a volatile in-memory store for sessions (great for tests), with
+[hmac](https://nodejs.org/api/crypto.html#crypto_crypto_createhmac_algorithm_key_options) for signature.
+
+```ts
+import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
+import fastifyCookie from 'fastify-cookie';
+import fastifySession from '@mgcrea/fastify-session';
+import { SODIUM_AUTH } from '@mgcrea/fastify-session-sodium-crypto';
+
 const SESSION_KEY = 'Egb/g4RUumlD2YhWYfeDlm5MddajSjGEBhm0OW+yo9s='';
 const SESSION_TTL = 864e3; // 1 day in seconds
+const REDIS_URI = process.env.REDIS_URI || 'redis://localhost:6379/1';
 
 export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
   const fastify = createFastify(options);
@@ -44,87 +74,8 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
   fastify.register(fastifyCookie);
   fastify.register(fastifySession, {
     key: Buffer.from(SESSION_KEY, 'base64'),
-    cookie: { maxAge: SESSION_TTL },
-  });
-
-  return fastify;
-};
-```
-
-### Using a secret (will derive a key on startup)
-
-```ts
-import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
-import fastifyCookie from 'fastify-cookie';
-import fastifySession from '@mgcrea/fastify-session';
-
-const SESSION_TTL = 864e3; // 1 day in seconds
-
-export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
-  const fastify = createFastify(options);
-
-  fastify.register(fastifyCookie);
-  fastify.register(fastifySession, {
-    secret: 'a secret with minimum length of 32 characters',
-    cookie: { maxAge: SESSION_TTL },
-  });
-
-  return fastify;
-};
-```
-
-### Stateful session
-
-Leveraging an external store, the session id (generated with [nanoid](https://github.com/ai/nanoid)) is signed using a
-secret-key with
-[libsodium's crytpo_auth](https://libsodium.gitbook.io/doc/secret-key_cryptography/secret-key_authentication)
-
-### Using a MemoryStore (useful for testing)
-
-```ts
-import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
-import fastifyCookie from 'fastify-cookie';
-import fastifySession, { MemoryStore } from '@mgcrea/fastify-session';
-import Redis from 'ioredis';
-
-const SESSION_TTL = 864e3; // 1 day in seconds
-
-export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
-  const fastify = createFastify(options);
-
-  fastify.register(fastifyCookie);
-  fastify.register(fastifySession, {
-    store: [new MemoryStore()],
-    crypto: [HMAC],
-    secret: 'a secret with minimum length of 32 characters',
-    cookie: { maxAge: SESSION_TTL },
-  });
-
-  return fastify;
-};
-```
-
-### Using an external store (eg. RedisStore)
-
-Using [fastify-redis-session](https://github.com/mgcrea/fastify-redis-session)
-
-```ts
-import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
-import fastifyCookie from 'fastify-cookie';
-import fastifySession from '@mgcrea/fastify-session';
-import RedisStore from '@mgcrea/fastify-redis-session-store';
-import Redis from 'ioredis';
-
-const REDIS_URI = process.env.REDIS_URI || 'redis://localhost:6379/1';
-const SESSION_TTL = 864e3; // 1 day in seconds
-
-export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
-  const fastify = createFastify(options);
-
-  fastify.register(fastifyCookie);
-  fastify.register(fastifySession, {
+    crypto: SODIUM_AUTH,
     store: new RedisStore({ client: new Redis(REDIS_URI), ttl: SESSION_TTL }),
-    secret: 'a secret with minimum length of 32 characters',
     cookie: { maxAge: SESSION_TTL },
   });
 
@@ -132,32 +83,33 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
 };
 ```
 
-## Benchmarks
+### Stateless example (encrypted session with sodium not using a store)
 
-### Session crypto sealing
+No external store required, the entire session data is encrypted using a secret-key with
+[libsodium's crypto_secretbox_easy](https://libsodium.gitbook.io/doc/secret-key_cryptography/secretbox)
 
-```sh
-NODE_PATH=. y ts-node --project test/tsconfig.json test/benchmark/cryptoSeal.ts
-```
+Here we used a `secret` instead of providing a `key`, key derivation will happen automatically on startup.
 
-```
-SODIUM_SECRETBOX#sealJson x 333,747 ops/sec ±0.62% (91 runs sampled)
-SODIUM_AUTH#sealJson x 376,300 ops/sec ±0.50% (89 runs sampled)
-HMAC#sealJson x 264,292 ops/sec ±3.13% (85 runs sampled)
-Fastest is SODIUM_AUTH#sealJson
-```
+```ts
+import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
+import fastifyCookie from 'fastify-cookie';
+import fastifySession from '@mgcrea/fastify-session';
+import { SODIUM_SECRETBOX } from '@mgcrea/fastify-session-sodium-crypto';
 
-### Session crypto unsealing
+const SESSION_TTL = 864e3; // 1 day in seconds
 
-```sh
-NODE_PATH=. y ts-node --project test/tsconfig.json test/benchmark/cryptoUnseal.ts
-```
+export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
+  const fastify = createFastify(options);
 
-```
-SODIUM_SECRETBOX#unsealJson x 424,297 ops/sec ±0.69% (86 runs sampled)
-SODIUM_AUTH#unsealJson x 314,736 ops/sec ±0.96% (89 runs sampled)
-HMAC#unsealJson x 145,037 ops/sec ±5.67% (78 runs sampled)
-Fastest is SODIUM_SECRETBOX#unsealJson
+  fastify.register(fastifyCookie);
+  fastify.register(fastifySession, {
+    secret: 'a secret with minimum length of 32 characters',
+    crypto: SODIUM_SECRETBOX,
+    cookie: { maxAge: SESSION_TTL },
+  });
+
+  return fastify;
+};
 ```
 
 ## Authors
