@@ -1,6 +1,8 @@
 import type { FastifyPluginAsync, FastifyRequest } from 'fastify';
 import type { CookieSerializeOptions } from 'fastify-cookie';
-import { kCookieOptions, Session, SessionStore } from './session';
+import { SessionCrypto } from './crypto';
+import { kCookieOptions, Session } from './session';
+import { SessionStore } from './store';
 import './typings';
 import { asBuffer, buildKeyFromSecretAndSalt, sanitizeSecretKeys } from './utils';
 
@@ -16,6 +18,7 @@ export type FastifySessionOptions = {
   cookieName?: string;
   cookie?: CookieSerializeOptions;
   store?: SessionStore;
+  crypto?: SessionCrypto;
   saveUninitialized?: boolean;
   logBindings?: Record<string, unknown>;
 };
@@ -28,6 +31,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     cookieName = DEFAULT_COOKIE_NAME,
     cookie: cookieOptions = {},
     store,
+    crypto,
     saveUninitialized = true,
     logBindings = { plugin: 'fastify-session' },
   } = options;
@@ -45,7 +49,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     cookieOptions.path = DEFAULT_COOKIE_PATH;
   }
 
-  Session.configure({ cookieOptions, secretKeys, store });
+  Session.configure({ cookieOptions, secretKeys, store, crypto });
 
   fastify.decorateRequest('session', null);
   async function destroySession(this: FastifyRequest) {
