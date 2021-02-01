@@ -8,9 +8,6 @@
   "repository": "github:mgcrea/fastify-session",
   "license": "MIT",
   "access": "public",
-  "bin": {
-    "fastify-session-genkey": "lib/bin/generate-key.js"
-  },
   "scripts": {
     "build": "rm -rf lib/*; tsc --build",
     "test": "jest",
