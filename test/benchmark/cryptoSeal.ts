@@ -1,5 +1,6 @@
+import { SODIUM_AUTH, SODIUM_SECRETBOX } from '@mgcrea/fastify-session-sodium-crypto';
 import { Event, Suite } from 'benchmark';
-import { HMAC, SODIUM_AUTH, SODIUM_SECRETBOX } from 'src/crypto';
+import { HMAC } from 'src/crypto';
 import { secretKey } from 'test/fixtures';
 
 const jsonMessage = Buffer.from(JSON.stringify({ hello: 'world' }));

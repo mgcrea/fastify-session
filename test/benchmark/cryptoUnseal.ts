@@ -1,5 +1,6 @@
+import { SODIUM_AUTH, SODIUM_SECRETBOX } from '@mgcrea/fastify-session-sodium-crypto';
 import { Event, Suite } from 'benchmark';
-import { SODIUM_AUTH, HMAC, SODIUM_SECRETBOX } from 'src/crypto';
+import { HMAC } from 'src/crypto';
 import { hmacFixture, secretKey, sodiumAuthFixture, sodiumSecretboxFixture } from 'test/fixtures';
 
 new Suite()
