@@ -15,11 +15,15 @@ export const kSessionStore = Symbol('kSessionStore');
 export const kSessionCrypto = Symbol('kSessionCrypto');
 export const kOtherOptions = Symbol('kOtherOptions');
 
-export type SessionOptions = {
+export type SessionConfiguration = {
   cookieOptions?: CookieSerializeOptions;
   crypto?: SessionCrypto;
   store?: SessionStore;
   secretKeys: Buffer[];
+};
+
+export type SessionOptions = CookieSerializeOptions & {
+  id?: string;
 };
 
 export class Session<T extends SessionData = SessionData> {
@@ -37,17 +41,23 @@ export class Session<T extends SessionData = SessionData> {
   private static [kSessionStore]?: SessionStore;
   private static [kCookieOptions]: CookieSerializeOptions;
 
-  static configure({ secretKeys, crypto = HMAC, store = MEMORY_STORE, cookieOptions = {} }: SessionOptions): void {
+  static configure({
+    secretKeys,
+    crypto = HMAC,
+    store = MEMORY_STORE,
+    cookieOptions = {},
+  }: SessionConfiguration): void {
     Session[kSecretKeys] = secretKeys;
     Session[kSessionCrypto] = crypto;
     Session[kSessionStore] = store;
     Session[kCookieOptions] = cookieOptions;
   }
 
-  constructor(data?: Partial<T>, options: CookieSerializeOptions = {}) {
+  constructor(data?: Partial<T>, options: SessionOptions = {}) {
+    const { id = nanoid(), ...cookieOptions } = options;
     this[kSessionData] = data || {};
-    this[kCookieOptions] = options;
-    this.id = Session[kSessionStore] ? nanoid() : '';
+    this[kCookieOptions] = cookieOptions;
+    this.id = id;
     this.created = !data;
     this.touch();
   }
@@ -73,14 +83,16 @@ export class Session<T extends SessionData = SessionData> {
     if (expiry && expiry <= Date.now()) {
       throw createError('ExpiredSession', 'the store returned an expired session');
     }
-    const session = new Session(data, { expires: expiry ? new Date(expiry) : undefined });
+    const session = new Session(data, { id: sessionId, expires: expiry ? new Date(expiry) : undefined });
     session.rotated = rotated;
     return session;
   }
 
   // Encoding
   async toCookie(): Promise<string> {
-    const buffer = Buffer.from(Session[kSessionCrypto].stateless ? JSON.stringify(this[kSessionData]) : this.id);
+    const buffer = Buffer.from(
+      Session[kSessionCrypto].stateless ? JSON.stringify({ ...this[kSessionData], id: this.id }) : this.id
+    );
     return Session[kSessionCrypto].sealMessage(buffer, Session[kSecretKeys][0]);
   }
 

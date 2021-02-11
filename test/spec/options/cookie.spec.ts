@@ -6,6 +6,11 @@ describe('cookie option', () => {
   const fastify = buildFastify({
     session: { cookie: { domain: 'example.com', httpOnly: true }, key: getRandomKey() },
   });
+  fastify.addHook('onSend', async (request) => {
+    if (context) {
+      context.set('session', request.session);
+    }
+  });
   afterAll(() => {
     fastify.close();
   });
@@ -25,8 +30,10 @@ describe('cookie option', () => {
     // @ts-expect-error LightMyRequest.Response.cookies
     expect(response.cookies[0].httpOnly).toBeTruthy();
     context.set('cookie', response.headers['set-cookie']);
+    context.set('sessionId', response.headers['set-cookie']);
   });
   it('should properly match an existing session', async () => {
+    const lastSessionId = context.get('session').id;
     const response = await fastify.inject({
       method: 'GET',
       url: '/',
@@ -37,5 +44,6 @@ describe('cookie option', () => {
     expect(response.statusCode).toEqual(200);
     expect(Object.keys(response.headers)).not.toContain('set-cookie');
     expect(response.payload).toEqual(JSON.stringify(context.get('payload')));
+    expect(lastSessionId).toEqual(context.get('session').id);
   });
 });

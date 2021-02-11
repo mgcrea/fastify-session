@@ -34,9 +34,13 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
     request.session.set('update', request.body);
     reply.send('hello world');
   });
+  fastify.get('/session', (request, reply) => {
+    reply.send({ id: request.session.id, data: request.session.data });
+  });
   fastify.post('/noop', (_request, reply) => {
     reply.send('hello world');
   });
+
   const schema = {
     body: {
       type: 'object',
