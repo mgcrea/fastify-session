@@ -90,7 +90,10 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
       log.debug(bindings, 'There was no session, leaving it as is');
       return;
     } else if (!saveUninitialized && !Object.keys(session.data).length) {
-      log.debug(bindings, "Created session is empty and won't be saved, leaving it as is");
+      log.debug(
+        { ...bindings, sessionId: session.id },
+        "Created session is empty and won't be saved, leaving it as is"
+      );
       return;
     } else if (!session.changed && !session.created && !session.rotated) {
       log.debug({ ...bindings, sessionId: session.id }, 'The existing session was not changed, leaving it as is');
