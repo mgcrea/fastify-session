@@ -42,7 +42,7 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
     return { id: request.session.id, data: request.session.data, expiry: request.session.expiry };
   });
   fastify.post('/noop', async (_request, reply) => {
-    reply.send('hello world');
+    return { ok: 1 };
   });
 
   const schema = {
