@@ -21,5 +21,5 @@ export abstract class SessionStore {
   async clear?(): Promise<void>;
 
   // "Touches" a given session, resetting the idle timer.
-  async touch?(sid: string, session: SessionData): Promise<void>;
+  async touch?(sid: string, expiry?: number | null): Promise<void>;
 }

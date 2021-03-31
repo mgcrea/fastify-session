@@ -19,6 +19,7 @@ export class MemoryStore<T extends SessionData = SessionData> extends EventEmitt
   }
 
   async set(sessionId: string, session: T, expiry: number | null = null): Promise<void> {
+    console.dir({ set: 1, expiry });
     this.store.set(this.getKey(sessionId), [session, expiry]);
   }
 
@@ -36,6 +37,16 @@ export class MemoryStore<T extends SessionData = SessionData> extends EventEmitt
 
   async destroy(sessionId: string): Promise<void> {
     this.store.delete(this.getKey(sessionId));
+  }
+
+  async touch(sessionId: string, expiry: number | null = null): Promise<void> {
+    const sessionData = await this.get(sessionId);
+    if (!sessionData) {
+      return;
+    }
+    const [session] = sessionData;
+    console.dir({ touch: 1, expiry });
+    this.set(sessionId, session, expiry);
   }
 
   async all(): Promise<{ [sid: string]: SessionData }> {

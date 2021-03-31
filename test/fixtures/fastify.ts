@@ -34,10 +34,14 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
     request.session.set('update', request.body);
     reply.send('hello world');
   });
-  fastify.get('/session', (request, reply) => {
-    reply.send({ id: request.session.id, data: request.session.data });
+  fastify.post('/touch', (request, reply) => {
+    request.session.touch();
+    reply.send('hello world');
   });
-  fastify.post('/noop', (_request, reply) => {
+  fastify.get('/session', async (request) => {
+    return { id: request.session.id, data: request.session.data, expiry: request.session.expiry };
+  });
+  fastify.post('/noop', async (_request, reply) => {
     reply.send('hello world');
   });
 
@@ -68,3 +72,5 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
   });
   return fastify;
 };
+
+export const waitFor = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));

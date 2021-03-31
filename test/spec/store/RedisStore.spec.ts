@@ -1,7 +1,7 @@
 import RedisStore from '@mgcrea/fastify-session-redis-store';
 import Redis from 'ioredis';
 import { DEFAULT_COOKIE_NAME } from 'src/plugin';
-import { buildFastify, getRandomKey } from 'test/fixtures';
+import { buildFastify, getRandomKey, waitFor } from 'test/fixtures';
 
 const REDIS_PORT = process.env.REDIS_PORT || 6379;
 const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
@@ -77,6 +77,37 @@ describe('store option', () => {
       expect(response.statusCode).toEqual(200);
       expect(Object.keys(response.headers)).not.toContain('set-cookie');
       expect(response.payload).toEqual(JSON.stringify({ data: context.get('payload'), update: context.get('update') }));
+    });
+    it('should properly touch an existing session', async () => {
+      const beforeResponse = await fastify.inject({
+        method: 'GET',
+        url: '/session',
+        headers: {
+          cookie: context.get('cookie'),
+        },
+        payload: context.get('update'),
+      });
+      const beforeResponseBody = JSON.parse(beforeResponse.body);
+      await waitFor(500);
+      const response = await fastify.inject({
+        method: 'POST',
+        url: '/touch',
+        headers: {
+          cookie: context.get('cookie'),
+        },
+        payload: context.get('update'),
+      });
+      expect(response.statusCode).toEqual(200);
+      const afterResponse = await fastify.inject({
+        method: 'GET',
+        url: '/session',
+        headers: {
+          cookie: context.get('cookie'),
+        },
+        payload: context.get('update'),
+      });
+      const afterResponseBody = JSON.parse(afterResponse.body);
+      expect(afterResponseBody.expiry - beforeResponseBody.expiry).toBeGreaterThan(500);
     });
   });
 });

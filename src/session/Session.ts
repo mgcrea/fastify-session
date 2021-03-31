@@ -56,7 +56,7 @@ export class Session<T extends SessionData = SessionData> {
   constructor(data?: Partial<T>, options: SessionOptions = {}) {
     const { id = nanoid(), ...cookieOptions } = options;
     this[kSessionData] = data || {};
-    this[kCookieOptions] = cookieOptions;
+    this[kCookieOptions] = { ...Session[kCookieOptions], ...cookieOptions };
     this.id = id;
     this.created = !data;
     this.touch();
@@ -103,13 +103,13 @@ export class Session<T extends SessionData = SessionData> {
     const { maxAge = Session[kCookieOptions].maxAge, expires = Session[kCookieOptions].expires } = this[kCookieOptions];
     if (maxAge) {
       const expiry = Date.now() + maxAge * 1000;
-      // Get the shortest lifespan between "expires" and "maxAge"
-      this[kExpiry] = expires ? Math.min(expires.getTime(), expiry) : expiry;
-      return;
-    }
-    if (expires) {
+      // Get the longest lifespan between "expires" and "maxAge"
+      this[kExpiry] = expires ? Math.max(expires.getTime(), expiry) : expiry;
+    } else if (expires) {
       this[kExpiry] = expires.getTime();
-      return;
+    }
+    if (!this.created && Session[kSessionStore]!.touch) {
+      await Session[kSessionStore]!.touch!(this.id, this[kExpiry]);
     }
   }
 
@@ -131,6 +131,10 @@ export class Session<T extends SessionData = SessionData> {
 
   get data(): SessionData {
     return this[kSessionData];
+  }
+
+  get expiry(): number | null {
+    return this[kExpiry];
   }
 
   // Lifecycle
