@@ -41,7 +41,7 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
   fastify.get('/session', async (request) => {
     return { id: request.session.id, data: request.session.data, expiry: request.session.expiry };
   });
-  fastify.post('/noop', async (_request, reply) => {
+  fastify.post('/noop', async () => {
     return { ok: 1 };
   });
 
