@@ -10,7 +10,6 @@ import { QuerystringOptions, Querystring } from './typings';
 export const DEFAULT_COOKIE_NAME = 'Session';
 export const DEFAULT_COOKIE_PATH = '/';
 export const DEFAULT_QUERYSTRING_PATHS = '/*';
-export const DEFAULT_QUERYSTRING_KEY = 'session';
 
 export type FastifySessionOptions = {
   salt?: Buffer | string;
@@ -66,7 +65,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     const { cookies, log, query } = request;
     const bindings = { ...logBindings, hook: 'onRequest' };
 
-    // set false cookie if session id provided in query parameter
+    // set fake cookie if session id provided in query parameter
     if (querystring) {
       log.debug({ ...bindings, querystring: query }, 'Query string option detected');
 
