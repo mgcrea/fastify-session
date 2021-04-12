@@ -2,6 +2,8 @@ import RedisStore from '@mgcrea/fastify-session-redis-store';
 import Redis from 'ioredis';
 import { DEFAULT_COOKIE_NAME } from 'src/plugin';
 import { buildFastify, getRandomKey, waitFor } from 'test/fixtures';
+import dotenv from 'dotenv';
+dotenv.config(); //excuse me for this
 
 const REDIS_PORT = process.env.REDIS_PORT || 6379;
 const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
