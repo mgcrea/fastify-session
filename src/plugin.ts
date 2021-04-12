@@ -79,7 +79,14 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
             'Path matches options, setting false cookie'
           );
         }
-      } else log.debug({ ...bindings, [querystring.key]: query[querystring.key] }, "Path doesn't match options");
+      } else {
+        log.debug({ ...bindings, [querystring.key]: query[querystring.key] }, "Path doesn't match options");
+        if (query[querystring.key])
+          log.warn(
+            { ...bindings, path: request.routerPath, specifiedPaths: querystring.paths, key: querystring.key },
+            "Seems like you're trying to provide session key in querystring to the wrong path"
+          );
+      }
     }
 
     const cookie = cookies[cookieName];
