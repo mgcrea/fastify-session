@@ -9,7 +9,7 @@
   "license": "MIT",
   "access": "public",
   "scripts": {
-    "build": "rm -rf lib/* && tsc --build",
+    "build": "rm -rf lib/*; tsc --build",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "prettycheck": "prettier --check 'src/' --check 'test/'",
