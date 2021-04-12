@@ -49,13 +49,6 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
   if (!cookieOptions.path) {
     cookieOptions.path = DEFAULT_COOKIE_PATH;
   }
-
-  if (typeof querystring === 'object') {
-    if (!querystring.paths) {
-      querystring.paths = DEFAULT_QUERYSTRING_PATHS;
-    }
-  }
-
   const secretKeys: Buffer[] = crypto.deriveSecretKeys(key, secret, salt);
   Session.configure({ cookieOptions, secretKeys, store, crypto });
 
@@ -78,7 +71,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
       log.debug({ ...bindings, querystring: query }, 'Query string option detected');
 
       // matching specified route
-      if (isMatch(request.routerPath, querystring.paths)) {
+      if (isMatch(request.routerPath, querystring.paths || DEFAULT_QUERYSTRING_PATHS)) {
         if (!cookies[cookieName] && query[querystring.key]) {
           cookies[cookieName] = decodeURIComponent(query[querystring.key]);
           log.debug(
