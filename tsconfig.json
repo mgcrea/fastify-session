@@ -1,5 +1,5 @@
 {
-  "extends": "../co-friendly/backend/tsconfig.json",
+  "extends": "@tsconfig/node10/tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
     "declaration": true,
