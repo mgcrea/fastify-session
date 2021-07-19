@@ -38,7 +38,7 @@ import fastifyCookie from 'fastify-cookie';
 import fastifySession from '@mgcrea/fastify-session';
 
 const SESSION_SECRET = 'a secret with minimum length of 32 characters';
-const SESSION_TTL = 864e3; // 1 day in seconds
+const SESSION_TTL = 86400; // 1 day in seconds
 
 export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
   const fastify = createFastify(options);
@@ -69,7 +69,7 @@ import fastifySession from '@mgcrea/fastify-session';
 import { SODIUM_AUTH } from '@mgcrea/fastify-session-sodium-crypto';
 
 const SESSION_KEY = 'Egb/g4RUumlD2YhWYfeDlm5MddajSjGEBhm0OW+yo9s='';
-const SESSION_TTL = 864e3; // 1 day in seconds
+const SESSION_TTL = 86400; // 1 day in seconds
 const REDIS_URI = process.env.REDIS_URI || 'redis://localhost:6379/1';
 
 export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
@@ -100,7 +100,7 @@ import fastifyCookie from 'fastify-cookie';
 import fastifySession from '@mgcrea/fastify-session';
 import { SODIUM_SECRETBOX } from '@mgcrea/fastify-session-sodium-crypto';
 
-const SESSION_TTL = 864e3; // 1 day in seconds
+const SESSION_TTL = 86400; // 1 day in seconds
 
 export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
   const fastify = createFastify(options);
