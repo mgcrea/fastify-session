@@ -44,6 +44,11 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
   fastify.post('/noop', async () => {
     return { ok: 1 };
   });
+  fastify.post('/q', async (request) => {
+    const sessionId = encodeURIComponent(await request.session.toCookie());
+    request.session.set('data', request.body);
+    return { token: sessionId };
+  });
 
   const schema = {
     body: {

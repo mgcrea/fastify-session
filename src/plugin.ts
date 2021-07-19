@@ -1,12 +1,15 @@
 import type { FastifyPluginAsync, FastifyRequest } from 'fastify';
 import type { CookieSerializeOptions } from 'fastify-cookie';
+import { isMatch } from 'micromatch';
 import { HMAC, SecretKey, SessionCrypto } from './crypto';
 import { kCookieOptions, Session } from './session';
 import { SessionStore } from './store';
 import './typings';
+import { QuerystringOptions, Querystring } from './typings';
 
 export const DEFAULT_COOKIE_NAME = 'Session';
 export const DEFAULT_COOKIE_PATH = '/';
+export const DEFAULT_QUERYSTRING_PATHS = '/*';
 
 export type FastifySessionOptions = {
   salt?: Buffer | string;
@@ -18,6 +21,7 @@ export type FastifySessionOptions = {
   crypto?: SessionCrypto;
   saveUninitialized?: boolean;
   logBindings?: Record<string, unknown>;
+  querystring?: QuerystringOptions;
 };
 
 export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify, options = {}): Promise<void> => {
@@ -31,6 +35,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     crypto = HMAC as SessionCrypto,
     saveUninitialized = true,
     logBindings = { plugin: 'fastify-session' },
+    querystring,
   } = options;
 
   if (!key && !secret) {
@@ -56,9 +61,32 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
   fastify.decorateRequest('destroySession', destroySession);
 
   // decode/create a session for every request
-  fastify.addHook('onRequest', async (request) => {
-    const { cookies, log } = request;
+  fastify.addHook<{ Querystring: Querystring }>('onRequest', async (request) => {
+    const { cookies, log, query } = request;
     const bindings = { ...logBindings, hook: 'onRequest' };
+
+    // set fake cookie if session id provided in query parameter
+    if (querystring) {
+      log.debug({ ...bindings, querystring: query }, 'Query string option detected');
+
+      // matching specified route
+      if (isMatch(request.routerPath, querystring.paths || DEFAULT_QUERYSTRING_PATHS)) {
+        if (!cookies[cookieName] && query[querystring.key]) {
+          cookies[cookieName] = decodeURIComponent(query[querystring.key]);
+          log.debug(
+            { ...bindings, [querystring.key]: query[querystring.key], cookies },
+            'Path matches options, setting false cookie'
+          );
+        }
+      } else {
+        log.debug({ ...bindings, [querystring.key]: query[querystring.key] }, "Path doesn't match options");
+        if (query[querystring.key])
+          log.warn(
+            { ...bindings, path: request.routerPath, specifiedPaths: querystring.paths, key: querystring.key },
+            "Seems like you're trying to provide session key in querystring to the wrong path"
+          );
+      }
+    }
 
     const cookie = cookies[cookieName];
     if (!cookie) {
