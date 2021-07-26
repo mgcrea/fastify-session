@@ -8,7 +8,7 @@
 
 Session plugin for [fastify](https://github.com/fastify/fastify) that supports both stateless and sateful sessions.
 
-- Requires [fastify-cookie](https://github.com/fastify/fastify-cookiek) to handle cookies.
+- Requires [fastify-cookie](https://github.com/fastify/fastify-cookie) to handle cookies.
 
 - Can leverage crypto addons like
   [@mgcrea/fastify-session-sodium-crypto](https://github.com/mgcrea/fastify-session-sodium-crypto) to perform crypto.
