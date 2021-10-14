@@ -2,6 +2,7 @@ import createFastify, { FastifyInstance, FastifyLoggerOptions, FastifyServerOpti
 import fastifyCookie from 'fastify-cookie';
 import fastifySession, { FastifySessionOptions } from 'src/index';
 import 'src/typings/fastify';
+import { JsonValue } from 'type-fest';
 
 type BuilfFastifyOptions = FastifyServerOptions & { session?: FastifySessionOptions };
 
@@ -22,19 +23,19 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
   fastify.register(fastifyCookie);
   fastify.register(fastifySession, sessionOptions);
 
-  fastify.post('/', (request, reply) => {
+  fastify.post<{ Body: JsonValue }>('/', (request, reply) => {
     request.session.set('data', request.body);
     reply.send('hello world');
   });
-  fastify.post('/auth', (request, reply) => {
+  fastify.post<{ Body: JsonValue }>('/auth', (request, reply) => {
     request.session.set('data', request.body);
     reply.send('hello world');
   });
-  fastify.post('/update', (request, reply) => {
+  fastify.post<{ Body: JsonValue }>('/update', (request, reply) => {
     request.session.set('update', request.body);
     reply.send('hello world');
   });
-  fastify.post('/touch', (request, reply) => {
+  fastify.post<{ Body: JsonValue }>('/touch', (request, reply) => {
     request.session.touch();
     reply.send('hello world');
   });
@@ -54,7 +55,7 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
       required: ['foo'],
     },
   };
-  fastify.post('/schema', { schema }, (request, reply) => {
+  fastify.post<{ Body: JsonValue }>('/schema', { schema }, (request, reply) => {
     request.session.set('data', request.body);
     reply.send('hello world');
   });
