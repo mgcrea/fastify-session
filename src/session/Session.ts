@@ -35,7 +35,7 @@ export class Session<T extends SessionData = SessionData> {
 
   private [kSessionData]: Partial<T>;
   private [kCookieOptions]: CookieSerializeOptions;
-  private [kExpiry]: number | null;
+  private [kExpiry]: number | null; // expiration timestamp in ms
   private static [kSecretKeys]: Buffer[];
   private static [kSessionCrypto]: SessionCrypto;
   private static [kSessionStore]?: SessionStore;
