@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "fastify-plugin": "^3.0.0",
-    "nanoid": "^3.1.29"
+    "nanoid": "^3.1.29",
+    "type-fest": "^2.5.0"
   },
   "devDependencies": {
     "@mgcrea/fastify-session-redis-store": "^0.10.1",
