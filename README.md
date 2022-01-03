@@ -1,10 +1,26 @@
-# FastifySession
+<!-- markdownlint-disable no-inline-html -->
 
-[![npm version](https://img.shields.io/npm/v/@mgcrea/fastify-session.svg)](https://github.com/mgcrea/fastify-session/releases)
-[![license](https://img.shields.io/npm/l/@mgcrea/fastify-session)](https://tldrlegal.com/license/mit-license)
-[![build status](https://img.shields.io/github/workflow/status/mgcrea/fastify-session/ci)](https://github.com/mgcrea/fastify-session/actions)
-[![dependencies status](https://img.shields.io/david/mgcrea/fastify-session)](https://david-dm.org/mgcrea/fastify-session)
-[![devDependencies status](https://img.shields.io/david/dev/mgcrea/fastify-session)](https://david-dm.org/mgcrea/fastify-session?type=dev)
+# fastify-session
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@mgcrea/fastify-session">
+    <img src="https://img.shields.io/npm/v/@mgcrea/fastify-session.svg?style=for-the-badge" alt="npm version" />
+  </a>
+  <!-- <a href="https://www.npmjs.com/package/@mgcrea/fastify-session">
+    <img src="https://img.shields.io/npm/dt/@mgcrea/fastify-session.svg?style=for-the-badge" alt="npm total downloads" />
+  </a> -->
+  <a href="https://www.npmjs.com/package/@mgcrea/fastify-session">
+    <img src="https://img.shields.io/npm/dm/@mgcrea/fastify-session.svg?style=for-the-badge" alt="npm monthly downloads" />
+  </a>
+  <a href="https://www.npmjs.com/package/@mgcrea/fastify-session">
+    <img src="https://img.shields.io/npm/l/@mgcrea/fastify-session.svg?style=for-the-badge" alt="npm license" />
+  </a>
+  <a href="https://github.com/mgcrea/fastify-session/actions/workflows/main.yml">
+    <img src="https://img.shields.io/github/workflow/status/mgcrea/fastify-session/main?style=for-the-badge" alt="github main workflow" />
+  </a>
+</p>
+
+## Features
 
 Session plugin for [fastify](https://github.com/fastify/fastify) that supports both stateless and sateful sessions.
 
@@ -19,13 +35,15 @@ Session plugin for [fastify](https://github.com/fastify/fastify) that supports b
 - Built with [TypeScript](https://www.typescriptlang.org/) for static type checking with exported types along the
   library.
 
-## Usage
+## Install
 
 ```bash
 npm install fastify-cookie @mgcrea/fastify-session --save
 # or
 yarn add fastify-cookie @mgcrea/fastify-session
 ```
+
+## Quickstart
 
 ### Basic example (signed session with hmac stored in a volatile in-memory store)
 
@@ -124,7 +142,7 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
 NODE_PATH=. y ts-node --project test/tsconfig.json test/benchmark/cryptoSeal.ts
 ```
 
-```
+```txt
 SODIUM_SECRETBOX#sealJson x 333,747 ops/sec ±0.62% (91 runs sampled)
 SODIUM_AUTH#sealJson x 376,300 ops/sec ±0.50% (89 runs sampled)
 HMAC#sealJson x 264,292 ops/sec ±3.13% (85 runs sampled)
@@ -137,7 +155,7 @@ Fastest is SODIUM_AUTH#sealJson
 NODE_PATH=. y ts-node --project test/tsconfig.json test/benchmark/cryptoUnseal.ts
 ```
 
-```
+```txt
 SODIUM_SECRETBOX#unsealJson x 424,297 ops/sec ±0.69% (86 runs sampled)
 SODIUM_AUTH#unsealJson x 314,736 ops/sec ±0.96% (89 runs sampled)
 HMAC#unsealJson x 145,037 ops/sec ±5.67% (78 runs sampled)
@@ -160,26 +178,21 @@ Heavily inspired from
 
 ## License
 
-```
+```md
 The MIT License
 
 Copyright (c) 2020 Olivier Louvignes <olivier@mgcrea.io>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
