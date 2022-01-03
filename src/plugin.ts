@@ -105,7 +105,10 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
         expires: new Date(0),
         maxAge: 0,
       });
-      log.info({ ...bindings, sessionId: session.id }, 'Deleted session');
+      log.debug({ ...bindings, sessionId: session.id }, 'Deleted existing session');
+      return;
+    } else if (session.skipped) {
+      log.debug({ ...bindings, sessionId: session.id }, 'Skipped session');
       return;
     }
 

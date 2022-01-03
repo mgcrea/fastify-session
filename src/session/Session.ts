@@ -32,6 +32,7 @@ export class Session<T extends SessionData = SessionData> {
   public rotated = false;
   public changed = false;
   public deleted = false;
+  public skipped = false;
 
   private [kSessionData]: Partial<T>;
   private [kCookieOptions]: CookieSerializeOptions;
