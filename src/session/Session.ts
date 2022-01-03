@@ -69,7 +69,8 @@ export class Session<T extends SessionData = SessionData> {
 
     // Stateless sessions have the whole session data encrypted as the cookie
     if (Session[kSessionCrypto].stateless) {
-      const session = new Session(JSON.parse(cleartext.toString()));
+      const data = JSON.parse(cleartext.toString());
+      const session = new Session(data, { id: data.id });
       session.rotated = rotated;
       return session;
     }
