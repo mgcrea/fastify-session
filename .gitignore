@@ -1,6 +1,8 @@
 .DS_Store
+.env
+.idea/
+.vscode/
+*.tsbuildinfo
+data/
 lib/
 node_modules/
-.vscode/
-.idea/
-*.tsbuildinfo

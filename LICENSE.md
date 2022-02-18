@@ -1,4 +1,4 @@
-The MIT License
+# The MIT License
 
 Copyright (c) 2020 Olivier Louvignes <olivier@mgcrea.io>
 
