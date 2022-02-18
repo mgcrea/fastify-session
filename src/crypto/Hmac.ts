@@ -23,7 +23,7 @@ export class Hmac implements SessionCrypto {
     return (
       message.toString(this.encoding) +
       CRYPTO_SPLIT_CHAR +
-      crypto.createHmac(this.algorithm, secretKey).update(message).digest(this.encoding).replace(/\=+$/, '')
+      crypto.createHmac(this.algorithm, secretKey).update(message).digest(this.encoding).replace(/=+$/, '')
     );
   }
   public unsealMessage(message: string, secretKeys: Buffer[]): { buffer: Buffer; rotated: boolean } {
