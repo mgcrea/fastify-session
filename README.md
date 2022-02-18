@@ -29,9 +29,11 @@ Session plugin for [fastify](https://github.com/fastify/fastify) that supports b
 - Can leverage crypto addons like
   [@mgcrea/fastify-session-sodium-crypto](https://github.com/mgcrea/fastify-session-sodium-crypto) to perform crypto.
 
-- Can leverage store addons like
-  [@mgcrea/fastify-session-redis-store](https://github.com/mgcrea/fastify-session-redis-store) or
-  [fastify-session-sqlite-store](https://github.com/oof2win2/fastify-session-sqlite-store) to store sessions.
+- Can leverage store addons like:
+
+  - [@mgcrea/fastify-session-redis-store](https://github.com/mgcrea/fastify-session-redis-store)
+  - [@mgcrea/fastify-session-prisma-store](https://github.com/mgcrea/fastify-session-prisma-store)
+  - [fastify-session-sqlite-store](https://github.com/oof2win2/fastify-session-sqlite-store)
 
 - Built with [TypeScript](https://www.typescriptlang.org/) for static type checking with exported types along the
   library.
