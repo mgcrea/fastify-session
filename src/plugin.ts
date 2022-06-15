@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync, FastifyRequest } from 'fastify';
-import type { CookieSerializeOptions } from 'fastify-cookie';
+import type { CookieSerializeOptions } from '@fastify/cookie';
 import { HMAC, SecretKey, SessionCrypto } from './crypto';
 import { kCookieOptions, Session } from './session';
 import { SessionStore } from './store';

@@ -1,18 +1,21 @@
-import createFastify, { FastifyInstance, FastifyLoggerOptions, FastifyServerOptions } from 'fastify';
-import fastifyCookie from 'fastify-cookie';
+import fastifyCookie from '@fastify/cookie';
+import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import fastifySession, { FastifySessionOptions } from 'src/index';
 import 'src/typings/fastify';
-import { JsonValue } from 'type-fest';
+import { JsonObject } from 'type-fest';
 
 type BuilfFastifyOptions = FastifyServerOptions & { session?: FastifySessionOptions };
 
-const logger: FastifyLoggerOptions = {
+const logger: FastifyServerOptions['logger'] = {
   level: 'debug',
-  prettyPrint: {
-    colorize: true,
-    ignore: 'pid,hostname',
-    translateTime: 'yyyy-mm-dd HH:MM:ss.l',
-    levelFirst: true,
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+      translateTime: 'yyyy-mm-dd HH:MM:ss.l',
+      ignore: 'pid,hostname',
+      levelFirst: true,
+    },
   },
 };
 
@@ -23,19 +26,19 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
   fastify.register(fastifyCookie);
   fastify.register(fastifySession, sessionOptions);
 
-  fastify.post<{ Body: JsonValue }>('/', (request, reply) => {
+  fastify.post<{ Body: JsonObject }>('/', (request, reply) => {
     request.session.set('data', request.body);
     reply.send('hello world');
   });
-  fastify.post<{ Body: JsonValue }>('/auth', (request, reply) => {
+  fastify.post<{ Body: JsonObject }>('/auth', (request, reply) => {
     request.session.set('data', request.body);
     reply.send('hello world');
   });
-  fastify.post<{ Body: JsonValue }>('/update', (request, reply) => {
+  fastify.post<{ Body: JsonObject }>('/update', (request, reply) => {
     request.session.set('update', request.body);
     reply.send('hello world');
   });
-  fastify.post<{ Body: JsonValue }>('/touch', (request, reply) => {
+  fastify.post<{ Body: JsonObject }>('/touch', (request, reply) => {
     request.session.touch();
     reply.send('hello world');
   });
@@ -55,7 +58,7 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
       required: ['foo'],
     },
   };
-  fastify.post<{ Body: JsonValue }>('/schema', { schema }, (request, reply) => {
+  fastify.post<{ Body: JsonObject }>('/schema', { schema }, (request, reply) => {
     request.session.set('data', request.body);
     reply.send('hello world');
   });

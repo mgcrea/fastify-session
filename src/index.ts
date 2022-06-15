@@ -8,6 +8,6 @@ export { MemoryStore, SessionStore } from './store';
 export { createError, ErrorWithCode, CRYPTO_SPLIT_CHAR } from './utils';
 
 export default fastifyPlugin(plugin, {
-  fastify: '3.x',
+  fastify: '4.x',
   name: 'fastify-session',
 });
