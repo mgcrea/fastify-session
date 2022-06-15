@@ -24,7 +24,7 @@
 
 Session plugin for [fastify](https://github.com/fastify/fastify) that supports both stateless and sateful sessions.
 
-- Requires [fastify-cookie](https://github.com/fastify/fastify-cookie) to handle cookies.
+- Requires [@fastify/cookie](https://github.com/fastify/fastify-cookie) to handle cookies.
 
 - Can leverage crypto addons like
   [@mgcrea/fastify-session-sodium-crypto](https://github.com/mgcrea/fastify-session-sodium-crypto) to perform crypto.
@@ -41,7 +41,7 @@ Session plugin for [fastify](https://github.com/fastify/fastify) that supports b
 ## Install
 
 ```bash
-npm install fastify-cookie @mgcrea/fastify-session
+npm install @fastify/cookie @mgcrea/fastify-session
 ```
 
 ## Quickstart
@@ -53,7 +53,7 @@ Defaults to a volatile in-memory store for sessions (great for tests), with
 
 ```ts
 import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
-import fastifyCookie from 'fastify-cookie';
+import fastifyCookie from '@fastify/cookie';
 import fastifySession from '@mgcrea/fastify-session';
 
 const SESSION_SECRET = 'a secret with minimum length of 32 characters';
