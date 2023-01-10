@@ -27,7 +27,7 @@
     "@fastify/cookie": "^7.0.0",
     "@mgcrea/fastify-session-redis-store": "^0.11.0",
     "@mgcrea/fastify-session-sodium-crypto": "^0.8.5",
-    "@tsconfig/node14": "^1.0.2",
+    "@tsconfig/node14": "^1.0.3",
     "@types/benchmark": "^2.1.1",
     "@types/ioredis": "^4.28.10",
     "@types/jest": "^28.1.1",
