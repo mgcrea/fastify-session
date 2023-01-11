@@ -1,7 +1,9 @@
 import { buildFastify, getRandomKey } from 'test/fixtures';
+import { afterAll, describe, expect, it } from 'vitest';
 
 describe('saveUninitialized option', () => {
   describe('with a falsy value', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const context = new Map<string, any>([['payload', { foo: 'bar' }]]);
     const fastify = buildFastify({
       session: { saveUninitialized: false, key: getRandomKey() },
@@ -20,6 +22,7 @@ describe('saveUninitialized option', () => {
     });
   });
   describe('with a truthy value', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const context = new Map<string, any>([['payload', { foo: 'bar' }]]);
     const fastify = buildFastify({
       session: { saveUninitialized: true, key: getRandomKey() },

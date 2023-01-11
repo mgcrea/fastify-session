@@ -1,8 +1,10 @@
-import { buildFastify, getRandomKey } from 'test/fixtures';
 import { DEFAULT_COOKIE_NAME } from 'src/plugin';
+import { buildFastify, getRandomKey } from 'test/fixtures';
+import { afterAll, describe, expect, it } from 'vitest';
 
 describe('key option', () => {
   describe('as a Buffer', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const context = new Map<string, any>([
       ['payload', { foo: 'bar' }],
       ['update', { foo: 'baz' }],
@@ -76,11 +78,14 @@ describe('key option', () => {
       });
       expect(response.statusCode).toEqual(200);
       expect(Object.keys(response.headers)).not.toContain('set-cookie');
-      expect(response.payload).toEqual(JSON.stringify({ data: context.get('payload'), update: context.get('update') }));
+      expect(response.payload).toEqual(
+        JSON.stringify({ data: context.get('payload'), update: context.get('update') })
+      );
     });
   });
 
   describe('as a base64 string', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const context = new Map<string, any>([['payload', { foo: 'bar' }]]);
     const fastify = buildFastify({
       session: { key: getRandomKey().toString('base64') },

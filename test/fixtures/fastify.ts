@@ -1,15 +1,14 @@
 import fastifyCookie from '@fastify/cookie';
 import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import fastifySession, { FastifySessionOptions } from 'src/index';
-import 'src/typings/fastify';
-import { JsonObject } from 'type-fest';
+import type { JsonObject } from 'src/typings';
 
 type BuilfFastifyOptions = FastifyServerOptions & { session?: FastifySessionOptions };
 
 const logger: FastifyServerOptions['logger'] = {
   level: 'debug',
   transport: {
-    target: 'pino-pretty',
+    target: '@mgcrea/pino-pretty-compact',
     options: {
       colorize: true,
       translateTime: 'yyyy-mm-dd HH:MM:ss.l',

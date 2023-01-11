@@ -1,9 +1,11 @@
+import { DEFAULT_COOKIE_NAME } from 'src/plugin';
 import { generateSalt } from 'src/utils';
 import { buildFastify } from 'test/fixtures';
-import { DEFAULT_COOKIE_NAME } from 'src/plugin';
+import { afterAll, describe, expect, it } from 'vitest';
 
 describe('secret option', () => {
   describe('without salt', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const context = new Map<string, any>([['payload', { foo: 'bar' }]]);
     const fastify = buildFastify({
       session: { secret: 'a secret with minimum length of 32 characters' },
@@ -41,7 +43,10 @@ describe('secret option', () => {
   describe('with salt as a base64 string', () => {
     const context = new Map<string, any>([['payload', { foo: 'bar' }]]);
     const fastify = buildFastify({
-      session: { secret: 'a secret with minimum length of 32 characters', salt: generateSalt().toString('base64') },
+      session: {
+        secret: 'a secret with minimum length of 32 characters',
+        salt: generateSalt().toString('base64'),
+      },
     });
     afterAll(() => {
       fastify.close();

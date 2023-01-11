@@ -1,4 +1,4 @@
-import type { JsonObject } from 'type-fest';
+import type { JsonObject } from 'src/typings';
 
 /**
  * This interface allows you to declare additional properties on your session object
@@ -12,6 +12,4 @@ import type { JsonObject } from 'type-fest';
  * }
  *
  */
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface SessionData extends JsonObject {}
+export interface SessionData extends JsonObject {} // eslint-disable-line @typescript-eslint/no-empty-interface

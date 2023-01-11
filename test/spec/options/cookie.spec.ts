@@ -1,7 +1,9 @@
-import { buildFastify, getRandomKey } from 'test/fixtures';
 import { DEFAULT_COOKIE_NAME } from 'src/plugin';
+import { buildFastify, getRandomKey } from 'test/fixtures';
+import { afterAll, describe, expect, it } from 'vitest';
 
 describe('cookie option', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const context = new Map<string, any>([['payload', { foo: 'bar' }]]);
   const fastify = buildFastify({
     session: { cookie: { domain: 'example.com', httpOnly: true }, key: getRandomKey() },

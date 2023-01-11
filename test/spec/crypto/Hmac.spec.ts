@@ -1,6 +1,7 @@
 import { HMAC } from 'src/crypto';
 import { CRYPTO_SPLIT_CHAR } from 'src/utils/crypto';
-import { secretKey, hmacFixture } from 'test/fixtures';
+import { hmacFixture, secretKey } from 'test/fixtures';
+import { describe, expect, it } from 'vitest';
 
 describe('SodiumAuth', () => {
   it('should properly sign a message', async () => {

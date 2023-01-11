@@ -1,6 +1,8 @@
 import { buildFastify, getRandomKey } from 'test/fixtures';
+import { afterAll, describe, expect, it } from 'vitest';
 
 describe('with malformed-cookie reply', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const context = new Map<string, any>([['payload', { foo: 'bar' }]]);
   const fastify = buildFastify({
     session: { cookieName: 'foobar', key: getRandomKey() },
