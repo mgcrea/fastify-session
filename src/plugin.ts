@@ -74,7 +74,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
     try {
       log.debug(bindings, "Found an existing cookie, attempting to decode session ...");
       request.session = await Session.fromCookie(cookie);
-      log.info({ ...bindings, sessionId: request.session.id }, "Session successfully decoded");
+      log.debug({ ...bindings, sessionId: request.session.id }, "Session successfully decoded");
       return;
     } catch (err) {
       request.session = new Session();
@@ -126,7 +126,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
         `About to save a ${session.created ? "created" : "changed"} session, saving ...`
       );
       await session.save();
-      log.info(
+      log.debug(
         { ...bindings, sessionId: session.id },
         `${session.created ? "Created" : "Changed"} session successfully saved`
       );
