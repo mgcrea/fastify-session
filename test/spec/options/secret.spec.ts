@@ -41,6 +41,7 @@ describe("secret option", () => {
   });
 
   describe("with salt as a base64 string", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const context = new Map<string, any>([["payload", { foo: "bar" }]]);
     const fastify = buildFastify({
       session: {

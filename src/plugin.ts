@@ -2,8 +2,7 @@ import type { CookieSerializeOptions } from "@fastify/cookie";
 import type { FastifyPluginAsync, FastifyRequest } from "fastify";
 import { HMAC, SecretKey, SessionCrypto } from "./crypto";
 import { kCookieOptions, Session } from "./session";
-import { SessionStore } from "./store";
-import "./typings";
+import type { SessionStore } from "./store";
 
 export const DEFAULT_COOKIE_NAME = "Session";
 export const DEFAULT_COOKIE_PATH = "/";

@@ -1,4 +1,4 @@
-import { Session } from "../session";
+import type { Session } from "../session";
 
 declare module "fastify" {
   interface FastifyRequest {

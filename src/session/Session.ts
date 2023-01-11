@@ -2,10 +2,10 @@
 import type { CookieSerializeOptions } from "@fastify/cookie";
 import { nanoid } from "nanoid";
 import { HMAC } from "../crypto/Hmac";
-import { SessionCrypto } from "../crypto/SessionCrypto";
+import type { SessionCrypto } from "../crypto/SessionCrypto";
 import { MEMORY_STORE, SessionStore } from "../store";
 import { createError } from "../utils";
-import { SessionData } from "./SessionData";
+import type { SessionData } from "./SessionData";
 
 export const kSessionData = Symbol("kSessionData");
 export const kCookieOptions = Symbol("kCookieOptions");
@@ -98,7 +98,7 @@ export class Session<T extends SessionData = SessionData> {
     const buffer = Buffer.from(
       Session[kSessionCrypto].stateless ? JSON.stringify({ ...this[kSessionData], id: this.id }) : this.id
     );
-    return Session[kSessionCrypto].sealMessage(buffer, Session[kSecretKeys][0]);
+    return Session[kSessionCrypto].sealMessage(buffer, Session[kSecretKeys][0]!);
   }
 
   async touch(): Promise<void> {

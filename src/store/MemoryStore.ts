@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import { SessionData, SessionStore } from "./SessionStore";
+import type { SessionData, SessionStore } from "./SessionStore";
 
 type StoredData<T> = [T, number | null]; // [session data, expiry time in ms]
 export type MemoryStoreOptions<T> = { store?: Map<string, StoredData<T>>; prefix?: string };

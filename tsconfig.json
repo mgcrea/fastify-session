@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/node-lts-strictest-esm/tsconfig.json",
   "compilerOptions": {
+    "exactOptionalPropertyTypes": false,
     "baseUrl": ".",
     "outDir": "dist",
     "paths": {

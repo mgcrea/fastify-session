@@ -1,6 +1,6 @@
 import crypto, { BinaryToTextEncoding } from "crypto";
 import { asBuffer, createError, CRYPTO_SPLIT_CHAR } from "../utils";
-import { SecretKey, SessionCrypto } from "./SessionCrypto";
+import type { SecretKey, SessionCrypto } from "./SessionCrypto";
 
 export class Hmac implements SessionCrypto {
   public readonly protocol = "/hmac";
