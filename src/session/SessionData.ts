@@ -1,4 +1,4 @@
-import type { JsonObject } from 'src/typings';
+import type { JsonObject } from "src/typings";
 
 /**
  * This interface allows you to declare additional properties on your session object

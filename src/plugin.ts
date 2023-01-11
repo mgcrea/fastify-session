@@ -1,12 +1,12 @@
-import type { FastifyPluginAsync, FastifyRequest } from 'fastify';
-import type { CookieSerializeOptions } from '@fastify/cookie';
-import { HMAC, SecretKey, SessionCrypto } from './crypto';
-import { kCookieOptions, Session } from './session';
-import { SessionStore } from './store';
-import './typings';
+import type { CookieSerializeOptions } from "@fastify/cookie";
+import type { FastifyPluginAsync, FastifyRequest } from "fastify";
+import { HMAC, SecretKey, SessionCrypto } from "./crypto";
+import { kCookieOptions, Session } from "./session";
+import { SessionStore } from "./store";
+import "./typings";
 
-export const DEFAULT_COOKIE_NAME = 'Session';
-export const DEFAULT_COOKIE_PATH = '/';
+export const DEFAULT_COOKIE_NAME = "Session";
+export const DEFAULT_COOKIE_PATH = "/";
 
 export type FastifySessionOptions = {
   salt?: Buffer | string;
@@ -20,7 +20,10 @@ export type FastifySessionOptions = {
   logBindings?: Record<string, unknown>;
 };
 
-export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify, options = {}): Promise<void> => {
+export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
+  fastify,
+  options = {}
+): Promise<void> => {
   const {
     key,
     secret,
@@ -30,14 +33,14 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
     store,
     crypto = HMAC as SessionCrypto,
     saveUninitialized = true,
-    logBindings = { plugin: 'fastify-session' },
+    logBindings = { plugin: "fastify-session" },
   } = options;
 
   if (!key && !secret) {
-    throw new Error('key or secret must specified');
+    throw new Error("key or secret must specified");
   }
   if (!crypto) {
-    throw new Error('invalid crypto specified');
+    throw new Error("invalid crypto specified");
   }
 
   if (!cookieOptions.path) {
@@ -46,30 +49,33 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
   const secretKeys: Buffer[] = crypto.deriveSecretKeys(key, secret, salt);
   Session.configure({ cookieOptions, secretKeys, store, crypto });
 
-  fastify.decorateRequest('session', null);
+  fastify.decorateRequest("session", null);
   async function destroySession(this: FastifyRequest) {
     if (!this.session) {
       return;
     }
     await this.session.destroy();
   }
-  fastify.decorateRequest('destroySession', destroySession);
+  fastify.decorateRequest("destroySession", destroySession);
 
   // decode/create a session for every request
-  fastify.addHook('onRequest', async (request) => {
+  fastify.addHook("onRequest", async (request) => {
     const { cookies, log } = request;
-    const bindings = { ...logBindings, hook: 'onRequest' };
+    const bindings = { ...logBindings, hook: "onRequest" };
 
     const cookie = cookies[cookieName];
     if (!cookie) {
       request.session = new Session();
-      log.debug({ ...bindings, sessionId: request.session.id }, 'There was no cookie, created an empty session');
+      log.debug(
+        { ...bindings, sessionId: request.session.id },
+        "There was no cookie, created an empty session"
+      );
       return;
     }
     try {
-      log.debug(bindings, 'Found an existing cookie, attempting to decode session ...');
+      log.debug(bindings, "Found an existing cookie, attempting to decode session ...");
       request.session = await Session.fromCookie(cookie);
-      log.info({ ...bindings, sessionId: request.session.id }, 'Session successfully decoded');
+      log.info({ ...bindings, sessionId: request.session.id }, "Session successfully decoded");
       return;
     } catch (err) {
       request.session = new Session();
@@ -82,12 +88,12 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
   });
 
   // encode a cookie
-  fastify.addHook('onSend', async (request, reply) => {
+  fastify.addHook("onSend", async (request, reply) => {
     const { session, log } = request;
-    const bindings = { ...logBindings, hook: 'onSend' };
+    const bindings = { ...logBindings, hook: "onSend" };
 
     if (!session) {
-      log.debug(bindings, 'There was no session, leaving it as is');
+      log.debug(bindings, "There was no session, leaving it as is");
       return;
     } else if (!saveUninitialized && !Object.keys(session.data).length) {
       log.debug(
@@ -96,31 +102,34 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (fastify,
       );
       return;
     } else if (!session.changed && !session.created && !session.rotated) {
-      log.debug({ ...bindings, sessionId: session.id }, 'The existing session was not changed, leaving it as is');
+      log.debug(
+        { ...bindings, sessionId: session.id },
+        "The existing session was not changed, leaving it as is"
+      );
       return;
     } else if (session.deleted) {
-      reply.setCookie(cookieName, '', {
+      reply.setCookie(cookieName, "", {
         ...cookieOptions,
         ...session[kCookieOptions],
         expires: new Date(0),
         maxAge: 0,
       });
-      log.debug({ ...bindings, sessionId: session.id }, 'Deleted existing session');
+      log.debug({ ...bindings, sessionId: session.id }, "Deleted existing session");
       return;
     } else if (session.skipped) {
-      log.debug({ ...bindings, sessionId: session.id }, 'Skipped session');
+      log.debug({ ...bindings, sessionId: session.id }, "Skipped session");
       return;
     }
 
     if (session.created || session.changed) {
       log.debug(
         { ...bindings, sessionId: session.id },
-        `About to save a ${session.created ? 'created' : 'changed'} session, saving ...`
+        `About to save a ${session.created ? "created" : "changed"} session, saving ...`
       );
       await session.save();
       log.info(
         { ...bindings, sessionId: session.id },
-        `${session.created ? 'Created' : 'Changed'} session successfully saved`
+        `${session.created ? "Created" : "Changed"} session successfully saved`
       );
     }
     reply.setCookie(cookieName, await session.toCookie(), { ...cookieOptions, ...session[kCookieOptions] });

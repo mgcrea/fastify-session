@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import type { CookieSerializeOptions } from '@fastify/cookie';
-import { nanoid } from 'nanoid';
-import { HMAC } from '../crypto/Hmac';
-import { SessionCrypto } from '../crypto/SessionCrypto';
-import { MEMORY_STORE, SessionStore } from '../store';
-import { createError } from '../utils';
-import { SessionData } from './SessionData';
+import type { CookieSerializeOptions } from "@fastify/cookie";
+import { nanoid } from "nanoid";
+import { HMAC } from "../crypto/Hmac";
+import { SessionCrypto } from "../crypto/SessionCrypto";
+import { MEMORY_STORE, SessionStore } from "../store";
+import { createError } from "../utils";
+import { SessionData } from "./SessionData";
 
-export const kSessionData = Symbol('kSessionData');
-export const kCookieOptions = Symbol('kCookieOptions');
-export const kExpiry = Symbol('kExpiry');
-export const kSecretKeys = Symbol('kSecretKeys');
-export const kSessionStore = Symbol('kSessionStore');
-export const kSessionCrypto = Symbol('kSessionCrypto');
-export const kOtherOptions = Symbol('kOtherOptions');
+export const kSessionData = Symbol("kSessionData");
+export const kCookieOptions = Symbol("kCookieOptions");
+export const kExpiry = Symbol("kExpiry");
+export const kSecretKeys = Symbol("kSecretKeys");
+export const kSessionStore = Symbol("kSessionStore");
+export const kSessionCrypto = Symbol("kSessionCrypto");
+export const kOtherOptions = Symbol("kOtherOptions");
 
 export type SessionConfiguration = {
   cookieOptions?: CookieSerializeOptions;
@@ -65,7 +65,10 @@ export class Session<T extends SessionData = SessionData> {
 
   // Decoding
   static async fromCookie(cookie: string): Promise<Session> {
-    const { buffer: cleartext, rotated } = Session[kSessionCrypto].unsealMessage(cookie, Session[kSecretKeys]);
+    const { buffer: cleartext, rotated } = Session[kSessionCrypto].unsealMessage(
+      cookie,
+      Session[kSecretKeys]
+    );
 
     // Stateless sessions have the whole session data encrypted as the cookie
     if (Session[kSessionCrypto].stateless) {
@@ -79,11 +82,11 @@ export class Session<T extends SessionData = SessionData> {
     const sessionId = cleartext.toString();
     const result = await Session[kSessionStore]!.get(sessionId);
     if (!result) {
-      throw createError('SessionNotFound', 'did not found a matching session in the store');
+      throw createError("SessionNotFound", "did not found a matching session in the store");
     }
     const [data, expiry] = result;
     if (expiry && expiry <= Date.now()) {
-      throw createError('ExpiredSession', 'the store returned an expired session');
+      throw createError("ExpiredSession", "the store returned an expired session");
     }
     const session = new Session(data, { id: sessionId, expires: expiry ? new Date(expiry) : undefined });
     session.rotated = rotated;
@@ -102,7 +105,8 @@ export class Session<T extends SessionData = SessionData> {
     if (Session[kSessionCrypto].stateless) {
       return;
     }
-    const { maxAge = Session[kCookieOptions].maxAge, expires = Session[kCookieOptions].expires } = this[kCookieOptions];
+    const { maxAge = Session[kCookieOptions].maxAge, expires = Session[kCookieOptions].expires } =
+      this[kCookieOptions];
     if (maxAge) {
       const expiry = Date.now() + maxAge * 1000;
       // Get the longest lifespan between "expires" and "maxAge"

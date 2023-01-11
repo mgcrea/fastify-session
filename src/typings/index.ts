@@ -1,2 +1,2 @@
-export * from './fastify';
-export * from './json';
+export * from "./fastify";
+export * from "./json";

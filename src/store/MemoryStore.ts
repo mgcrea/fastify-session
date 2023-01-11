@@ -1,5 +1,5 @@
-import { EventEmitter } from 'events';
-import { SessionStore, SessionData } from './SessionStore';
+import { EventEmitter } from "events";
+import { SessionData, SessionStore } from "./SessionStore";
 
 type StoredData<T> = [T, number | null]; // [session data, expiry time in ms]
 export type MemoryStoreOptions<T> = { store?: Map<string, StoredData<T>>; prefix?: string };
@@ -8,7 +8,7 @@ export class MemoryStore<T extends SessionData = SessionData> extends EventEmitt
   private store: Map<string, StoredData<T>>;
   private readonly prefix: string;
 
-  constructor({ store = new Map(), prefix = 'sess:' }: MemoryStoreOptions<T> = {}) {
+  constructor({ store = new Map(), prefix = "sess:" }: MemoryStoreOptions<T> = {}) {
     super();
     this.store = store;
     this.prefix = prefix;

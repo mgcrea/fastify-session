@@ -1,47 +1,47 @@
-import { buildFastify, getRandomKey } from 'test/fixtures';
-import { afterAll, describe, expect, it } from 'vitest';
+import { buildFastify, getRandomKey } from "test/fixtures";
+import { afterAll, describe, expect, it } from "vitest";
 
-describe('saveUninitialized option', () => {
-  describe('with a falsy value', () => {
+describe("saveUninitialized option", () => {
+  describe("with a falsy value", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const context = new Map<string, any>([['payload', { foo: 'bar' }]]);
+    const context = new Map<string, any>([["payload", { foo: "bar" }]]);
     const fastify = buildFastify({
       session: { saveUninitialized: false, key: getRandomKey() },
     });
     afterAll(() => {
       fastify.close();
     });
-    it('should receive a cookie', async () => {
+    it("should receive a cookie", async () => {
       const response = await fastify.inject({
-        method: 'POST',
-        url: '/noop',
-        payload: context.get('payload'),
+        method: "POST",
+        url: "/noop",
+        payload: context.get("payload"),
       });
       expect(response.statusCode).toEqual(200);
-      expect(Object.keys(response.headers)).not.toContain('set-cookie');
+      expect(Object.keys(response.headers)).not.toContain("set-cookie");
     });
   });
-  describe('with a truthy value', () => {
+  describe("with a truthy value", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const context = new Map<string, any>([['payload', { foo: 'bar' }]]);
+    const context = new Map<string, any>([["payload", { foo: "bar" }]]);
     const fastify = buildFastify({
       session: { saveUninitialized: true, key: getRandomKey() },
     });
     afterAll(() => {
       fastify.close();
     });
-    it('should receive a cookie', async () => {
+    it("should receive a cookie", async () => {
       const response = await fastify.inject({
-        method: 'POST',
-        url: '/noop',
-        payload: context.get('payload'),
+        method: "POST",
+        url: "/noop",
+        payload: context.get("payload"),
       });
       expect(response.statusCode).toEqual(200);
-      expect(Object.keys(response.headers)).toContain('set-cookie');
-      expect(response.headers['set-cookie']).toBeTruthy();
+      expect(Object.keys(response.headers)).toContain("set-cookie");
+      expect(response.headers["set-cookie"]).toBeTruthy();
       // @ts-expect-error LightMyRequest.Response.cookies
-      expect(response.cookies[0].name).toEqual('Session');
-      context.set('cookie', response.headers['set-cookie']);
+      expect(response.cookies[0].name).toEqual("Session");
+      context.set("cookie", response.headers["set-cookie"]);
     });
   });
 });

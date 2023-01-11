@@ -1,4 +1,4 @@
-import type { SessionData } from '../session/SessionData';
+import type { SessionData } from "../session/SessionData";
 export { SessionData };
 
 export abstract class SessionStore {

@@ -1,6 +1,6 @@
-import { Session } from '../session';
+import { Session } from "../session";
 
-declare module 'fastify' {
+declare module "fastify" {
   interface FastifyRequest {
     session: Session;
     destroySession: () => Promise<void>;

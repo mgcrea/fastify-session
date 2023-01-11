@@ -1,4 +1,4 @@
-import { CRYPTO_SPLIT_CHAR } from 'src/utils';
+import { CRYPTO_SPLIT_CHAR } from "src/utils";
 
 export const hmacFixture = `eyJoZWxsbyI6IndvcmxkIn0=${CRYPTO_SPLIT_CHAR}+/WeG0P0DpB/Eed5hiyl5KDM7tLQnkSujlVo20de0L0`;
 

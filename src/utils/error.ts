@@ -7,4 +7,5 @@ export class ErrorWithCode extends Error {
   }
 }
 
-export const createError = (code: string, message?: string): ErrorWithCode => new ErrorWithCode(code, message);
+export const createError = (code: string, message?: string): ErrorWithCode =>
+  new ErrorWithCode(code, message);
