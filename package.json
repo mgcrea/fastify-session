@@ -39,7 +39,7 @@
   "devDependencies": {
     "@fastify/cookie": "^8.3.0",
     "@mgcrea/fastify-session-redis-store": "^1.0.0",
-    "@mgcrea/fastify-session-sodium-crypto": "^1.0.0",
+    "@mgcrea/fastify-session-sodium-crypto": "^1.0.1",
     "@mgcrea/pino-pretty-compact": "^1.0.0",
     "@tsconfig/node-lts-strictest-esm": "^18.12.1",
     "@types/benchmark": "^2.1.2",

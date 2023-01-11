@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@fastify/cookie': ^8.3.0
   '@mgcrea/fastify-session-redis-store': ^1.0.0
-  '@mgcrea/fastify-session-sodium-crypto': ^1.0.0
+  '@mgcrea/fastify-session-sodium-crypto': ^1.0.1
   '@mgcrea/pino-pretty-compact': ^1.0.0
   '@tsconfig/node-lts-strictest-esm': ^18.12.1
   '@types/benchmark': ^2.1.2
@@ -37,7 +37,7 @@ dependencies:
 devDependencies:
   '@fastify/cookie': 8.3.0
   '@mgcrea/fastify-session-redis-store': 1.0.0_ioredis@5.2.4
-  '@mgcrea/fastify-session-sodium-crypto': 1.0.0
+  '@mgcrea/fastify-session-sodium-crypto': 1.0.1
   '@mgcrea/pino-pretty-compact': 1.0.0
   '@tsconfig/node-lts-strictest-esm': 18.12.1
   '@types/benchmark': 2.1.2
@@ -381,11 +381,11 @@ packages:
       ioredis: 5.2.4
     dev: true
 
-  /@mgcrea/fastify-session-sodium-crypto/1.0.0:
-    resolution: {integrity: sha512-8LLRQ2Z984NHcrJ9H2v8YcQl9SobCtKSgAr/01R0nn7/NBi42AGivodgxlEl3KK8SiGSQsgYCDc+j24+i85BNw==}
+  /@mgcrea/fastify-session-sodium-crypto/1.0.1:
+    resolution: {integrity: sha512-lHXc+18xOSYVhDbDGOBk8oWn1tsgt2G8+7FEgNFdxU4rIsZ5+TsRe9LK/PampczW2uNlO9tiF3kGzkiXm9LEmw==}
     hasBin: true
     peerDependencies:
-      '@mgcrea/fastify-session': ^0.16.0
+      '@mgcrea/fastify-session': ^1.0.0
     dependencies:
       sodium-native: 4.0.0
     dev: true
