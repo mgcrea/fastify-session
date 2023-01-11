@@ -1,6 +1,6 @@
 {
   "name": "@mgcrea/fastify-session",
-  "version": "0.16.0",
+  "version": "1.0.0",
   "description": "Session plugin for fastify written in TypeScript supporting both stateless and stateful sessions",
   "author": "Olivier Louvignes <olivier@mgcrea.io>",
   "repository": "github:mgcrea/fastify-session",
