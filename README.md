@@ -1,24 +1,28 @@
-<!-- markdownlint-disable no-inline-html -->
+# FastifySession
 
-# fastify-session
-
+<!-- markdownlint-disable MD033 -->
 <p align="center">
   <a href="https://www.npmjs.com/package/@mgcrea/fastify-session">
     <img src="https://img.shields.io/npm/v/@mgcrea/fastify-session.svg?style=for-the-badge" alt="npm version" />
   </a>
-  <!-- <a href="https://www.npmjs.com/package/@mgcrea/fastify-session">
+  <a href="https://www.npmjs.com/package/@mgcrea/fastify-session">
     <img src="https://img.shields.io/npm/dt/@mgcrea/fastify-session.svg?style=for-the-badge" alt="npm total downloads" />
-  </a> -->
+  </a>
   <a href="https://www.npmjs.com/package/@mgcrea/fastify-session">
     <img src="https://img.shields.io/npm/dm/@mgcrea/fastify-session.svg?style=for-the-badge" alt="npm monthly downloads" />
   </a>
   <a href="https://www.npmjs.com/package/@mgcrea/fastify-session">
     <img src="https://img.shields.io/npm/l/@mgcrea/fastify-session.svg?style=for-the-badge" alt="npm license" />
   </a>
+  <br />
   <a href="https://github.com/mgcrea/fastify-session/actions/workflows/main.yml">
-    <img src="https://img.shields.io/github/workflow/status/mgcrea/fastify-session/main?style=for-the-badge" alt="github main workflow" />
+    <img src="https://img.shields.io/github/actions/workflow/status/mgcrea/fastify-session/main.yml?style=for-the-badge&branch=master" alt="build status" />
+  </a>
+  <a href="https://depfu.com/github/mgcrea/fastify-session">
+    <img src="https://img.shields.io/depfu/dependencies/github/mgcrea/fastify-session?style=for-the-badge" alt="dependencies status" />
   </a>
 </p>
+<!-- markdownlint-enable MD037 -->
 
 ## Features
 
@@ -43,7 +47,9 @@ Session plugin for [fastify](https://github.com/fastify/fastify) that supports b
 ## Install
 
 ```bash
-npm install @fastify/cookie @mgcrea/fastify-session
+npm install @mgcrea/fastify-session @fastify/cookie
+# or
+pnpm add @mgcrea/fastify-session @fastify/cookie
 ```
 
 ## Quickstart
@@ -54,11 +60,11 @@ Defaults to a volatile in-memory store for sessions (great for tests), with
 [hmac](https://nodejs.org/api/crypto.html#crypto_crypto_createhmac_algorithm_key_options) for signature.
 
 ```ts
-import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
-import fastifyCookie from '@fastify/cookie';
-import fastifySession from '@mgcrea/fastify-session';
+import createFastify, { FastifyInstance, FastifyServerOptions } from "fastify";
+import fastifyCookie from "@fastify/cookie";
+import fastifySession from "@mgcrea/fastify-session";
 
-const SESSION_SECRET = 'a secret with minimum length of 32 characters';
+const SESSION_SECRET = "a secret with minimum length of 32 characters";
 const SESSION_TTL = 86400; // 1 day in seconds
 
 export const buildFastify = (options?: FastifyServerOptions): FastifyInstance => {
@@ -116,10 +122,10 @@ No external store required, the entire session data is encrypted using a secret-
 Here we used a `secret` instead of providing a `key`, key derivation will happen automatically on startup.
 
 ```ts
-import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
-import fastifyCookie from 'fastify-cookie';
-import fastifySession from '@mgcrea/fastify-session';
-import { SODIUM_SECRETBOX } from '@mgcrea/fastify-session-sodium-crypto';
+import createFastify, { FastifyInstance, FastifyServerOptions } from "fastify";
+import fastifyCookie from "fastify-cookie";
+import fastifySession from "@mgcrea/fastify-session";
+import { SODIUM_SECRETBOX } from "@mgcrea/fastify-session-sodium-crypto";
 
 const SESSION_TTL = 86400; // 1 day in seconds
 
@@ -128,7 +134,7 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
 
   fastify.register(fastifyCookie);
   fastify.register(fastifySession, {
-    secret: 'a secret with minimum length of 32 characters',
+    secret: "a secret with minimum length of 32 characters",
     crypto: SODIUM_SECRETBOX,
     cookie: { maxAge: SESSION_TTL },
   });
