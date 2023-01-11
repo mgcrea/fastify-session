@@ -24,6 +24,8 @@ specifiers:
   prettier-plugin-organize-imports: ^3.2.1
   rimraf: ^3.0.2
   ts-node: ^10.9.1
+  ts-paths-esm-loader: ^1.3.2
+  tsconfig-paths: ^3.12.0
   tsup: ^6.5.0
   typescript: ^4.9.4
   vitest: ^0.27.0
@@ -54,6 +56,8 @@ devDependencies:
   prettier-plugin-organize-imports: 3.2.1_7zh76q2qrt7th5cvcxurl33jgy
   rimraf: 3.0.2
   ts-node: 10.9.1_awa2wsr5thmg3i7jqycphctjfq
+  ts-paths-esm-loader: 1.3.2_4igzxqbmtwm4ap6wlyb5t7kyie
+  tsconfig-paths: 3.14.1
   tsup: 6.5.0_z6wznmtyb6ovnulj6iujpct7um
   typescript: 4.9.4
   vitest: 0.27.0
@@ -450,6 +454,10 @@ packages:
 
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
+    dev: true
+
+  /@types/json5/0.0.29:
+    resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
   /@types/node/18.11.18:
@@ -1740,6 +1748,13 @@ packages:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
     dev: true
 
+  /json5/1.0.2:
+    resolution: {integrity: sha512-g1MWMLBiz8FKi1e4w0UyVL3w+iJceWAFBAaBnnGKOpNa5f8TLktkbre1+s6oICydWAm+HRUGTmI+//xv2hvXYA==}
+    hasBin: true
+    dependencies:
+      minimist: 1.2.7
+    dev: true
+
   /jsonc-parser/3.2.0:
     resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
     dev: true
@@ -2401,6 +2416,11 @@ packages:
       ansi-regex: 5.0.1
     dev: true
 
+  /strip-bom/3.0.0:
+    resolution: {integrity: sha512-vavAMRXOgBVNF6nyEEmL3DBK19iRpDcoIwW+swQ+CbGiu7lju6t+JklA1MHweoWtadgt4ISVUsXLyDq34ddcwA==}
+    engines: {node: '>=4'}
+    dev: true
+
   /strip-final-newline/2.0.0:
     resolution: {integrity: sha512-BrpvfNAE3dcvq7ll3xVumzjKjZQ5tI1sEUIKr3Uoks0XUl45St3FlatVqef9prk4jRDzhW6WZg+3bk93y6pLjA==}
     engines: {node: '>=6'}
@@ -2535,6 +2555,25 @@ packages:
       typescript: 4.9.4
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+    dev: true
+
+  /ts-paths-esm-loader/1.3.2_4igzxqbmtwm4ap6wlyb5t7kyie:
+    resolution: {integrity: sha512-MDskMwhdnnMev3ulN96kcHByy9VuZritUrbxCZyYcxaHg2e2y2rFqXE8UthOHqFuIiD42r3Ly+4pp5ffkkDyJg==}
+    peerDependencies:
+      ts-node: ^10.4.0
+      tsconfig-paths: ^3.12.0
+    dependencies:
+      ts-node: 10.9.1_awa2wsr5thmg3i7jqycphctjfq
+      tsconfig-paths: 3.14.1
+    dev: true
+
+  /tsconfig-paths/3.14.1:
+    resolution: {integrity: sha512-fxDhWnFSLt3VuTwtvJt5fpwxBHg5AdKWMsgcPOOIilyjymcYVZoCQF8fvFRezCNfblEXmi+PcM1eYHeOAgXCOQ==}
+    dependencies:
+      '@types/json5': 0.0.29
+      json5: 1.0.2
+      minimist: 1.2.7
+      strip-bom: 3.0.0
     dev: true
 
   /tslib/1.14.1:

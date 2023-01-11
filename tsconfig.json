@@ -5,6 +5,7 @@
     "baseUrl": ".",
     "outDir": "dist",
     "paths": {
+      "@mgcrea/fastify-session": ["."],
       "src/*": ["./src/*"],
       "test/*": ["./test/*"]
     }

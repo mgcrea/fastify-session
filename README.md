@@ -148,7 +148,7 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
 ### Session crypto sealing
 
 ```sh
-NODE_PATH=. y ts-node --project test/tsconfig.json test/benchmark/cryptoSeal.ts
+node --experimental-specifier-resolution=node --loader=ts-paths-esm-loader/transpile-only --no-warnings test/benchmark/cryptoSeal.ts
 ```
 
 ```txt
@@ -161,7 +161,7 @@ Fastest is SODIUM_AUTH#sealJson
 ### Session crypto unsealing
 
 ```sh
-NODE_PATH=. y ts-node --project test/tsconfig.json test/benchmark/cryptoUnseal.ts
+node --experimental-specifier-resolution=node --loader=ts-paths-esm-loader/transpile-only --no-warnings test/benchmark/cryptoUnseal.ts
 ```
 
 ```txt
