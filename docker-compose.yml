@@ -1,0 +1,15 @@
+version: '2.3'
+
+services:
+  # https://hub.docker.com/r/bitnami/redis
+  # https://github.com/bitnami/bitnami-docker-redis
+  redis:
+    container_name: fastify_session_redis
+    image: docker.io/bitnami/redis:6.0
+    environment:
+      ALLOW_EMPTY_PASSWORD: 'yes'
+      # - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - '6379:6379'
+    volumes:
+      - './data/redis:/bitnami/redis/data'
