@@ -165,4 +165,8 @@ export class Session<T extends SessionData = SessionData> {
   setOptions(options: CookieSerializeOptions): void {
     Object.assign(this[kCookieOptions], options);
   }
+
+  isEmpty(): boolean {
+    return Object.keys(this[kSessionData]).length === 0;
+  }
 }
