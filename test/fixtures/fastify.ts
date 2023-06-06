@@ -1,6 +1,6 @@
 import fastifyCookie from "@fastify/cookie";
-import createFastify, { FastifyInstance, FastifyServerOptions } from "fastify";
-import fastifySession, { FastifySessionOptions } from "src/index";
+import createFastify, { type FastifyInstance, type FastifyServerOptions } from "fastify";
+import fastifySession, { type FastifySessionOptions } from "src/index";
 import type { JsonObject } from "src/typings";
 
 type BuilfFastifyOptions = FastifyServerOptions & { session?: FastifySessionOptions };

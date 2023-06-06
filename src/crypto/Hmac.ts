@@ -1,4 +1,4 @@
-import crypto, { BinaryToTextEncoding } from "crypto";
+import crypto, { type BinaryToTextEncoding } from "crypto";
 import { asBuffer, createError, CRYPTO_SPLIT_CHAR } from "../utils";
 import type { SecretKey, SessionCrypto } from "./SessionCrypto";
 

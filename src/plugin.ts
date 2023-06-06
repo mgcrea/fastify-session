@@ -1,7 +1,7 @@
 import type { CookieSerializeOptions } from "@fastify/cookie";
 import type { FastifyPluginAsync, FastifyRequest } from "fastify";
-import { HMAC, SecretKey, SessionCrypto } from "./crypto";
-import { kCookieOptions, Session } from "./session";
+import { HMAC, SessionCrypto, type SecretKey } from "./crypto";
+import { Session } from "./session";
 import type { SessionStore } from "./store";
 
 export const DEFAULT_COOKIE_NAME = "Session";
@@ -64,7 +64,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
 
     const cookie = cookies[cookieName];
     if (!cookie) {
-      request.session = new Session();
+      request.session = await Session.create();
       log.debug(
         { ...bindings, sessionId: request.session.id },
         "There was no cookie, created an empty session"
@@ -77,7 +77,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
       log.debug({ ...bindings, sessionId: request.session.id }, "Session successfully decoded");
       return;
     } catch (err) {
-      request.session = new Session();
+      request.session = await Session.create();
       log.warn(
         { ...bindings, err, sessionId: request.session.id },
         `Failed to decode existing cookie, created an empty session`
@@ -108,8 +108,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
       return;
     } else if (session.deleted) {
       reply.setCookie(cookieName, "", {
-        ...cookieOptions,
-        ...session[kCookieOptions],
+        ...session.options,
         expires: new Date(0),
         maxAge: 0,
       });
@@ -131,6 +130,6 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
         `${session.created ? "Created" : "Changed"} session successfully saved`
       );
     }
-    reply.setCookie(cookieName, await session.toCookie(), { ...cookieOptions, ...session[kCookieOptions] });
+    reply.setCookie(cookieName, await session.toCookie(), session.options);
   });
 };

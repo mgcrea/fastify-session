@@ -1,5 +1,5 @@
 import type { SessionData } from "../session/SessionData";
-export { SessionData };
+export type { SessionData };
 
 export abstract class SessionStore {
   // Gets the session from the store given a session ID.
