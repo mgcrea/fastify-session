@@ -100,7 +100,10 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
         expires: new Date(0),
         maxAge: 0,
       });
-      log.debug({ ...bindings, sessionId: session.id }, "Deleted existing session");
+      log.debug(
+        { ...bindings, sessionId: session.id },
+        `Deleted ${session.created ? "newly created" : "existing"} session`
+      );
       return;
     } else if (!saveUninitialized && session.isEmpty()) {
       log.debug(
