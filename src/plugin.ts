@@ -94,6 +94,14 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
     if (!session) {
       log.debug(bindings, "There was no session, leaving it as is");
       return;
+    } else if (session.deleted) {
+      reply.setCookie(cookieName, "", {
+        ...session.options,
+        expires: new Date(0),
+        maxAge: 0,
+      });
+      log.debug({ ...bindings, sessionId: session.id }, "Deleted existing session");
+      return;
     } else if (!saveUninitialized && session.isEmpty()) {
       log.debug(
         { ...bindings, sessionId: session.id },
@@ -105,14 +113,6 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
         { ...bindings, sessionId: session.id },
         "The existing session was not changed, leaving it as is"
       );
-      return;
-    } else if (session.deleted) {
-      reply.setCookie(cookieName, "", {
-        ...session.options,
-        expires: new Date(0),
-        maxAge: 0,
-      });
-      log.debug({ ...bindings, sessionId: session.id }, "Deleted existing session");
       return;
     } else if (session.skipped) {
       log.debug({ ...bindings, sessionId: session.id }, "Skipped session");
