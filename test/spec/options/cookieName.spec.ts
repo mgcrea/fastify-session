@@ -16,11 +16,11 @@ describe("cookieName option", () => {
       url: "/",
       payload: context.get("payload"),
     });
-    expect(response.statusCode).toEqual(200);
+    expect(response.statusCode).toBe(200);
     expect(Object.keys(response.headers)).toContain("set-cookie");
     expect(response.headers["set-cookie"]).toBeTruthy();
     // @ts-expect-error LightMyRequest.Response.cookies
-    expect(response.cookies[0].name).toEqual("foobar");
+    expect(response.cookies[0].name).toBe("foobar");
     context.set("cookie", response.headers["set-cookie"]);
   });
   it("should properly match an existing session", async () => {
@@ -31,7 +31,7 @@ describe("cookieName option", () => {
         cookie: context.get("cookie"),
       },
     });
-    expect(response.statusCode).toEqual(200);
+    expect(response.statusCode).toBe(200);
     expect(Object.keys(response.headers)).not.toContain("set-cookie");
     expect(response.payload).toEqual(JSON.stringify(context.get("payload")));
   });

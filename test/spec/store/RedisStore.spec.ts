@@ -33,7 +33,7 @@ describe("store option", () => {
         url: "/",
         payload: context.get("payload"),
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).toContain("set-cookie");
       expect(response.headers["set-cookie"]).toBeTruthy();
       // @ts-expect-error LightMyRequest.Response.cookies
@@ -48,7 +48,7 @@ describe("store option", () => {
           cookie: context.get("cookie"),
         },
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).not.toContain("set-cookie");
       expect(response.payload).toEqual(JSON.stringify(context.get("payload")));
     });
@@ -61,7 +61,7 @@ describe("store option", () => {
         },
         payload: context.get("update"),
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).toContain("set-cookie");
       expect(response.headers["set-cookie"]).toBeTruthy();
       // @ts-expect-error LightMyRequest.Response.cookies
@@ -76,7 +76,7 @@ describe("store option", () => {
           cookie: context.get("cookie"),
         },
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).not.toContain("set-cookie");
       expect(response.payload).toEqual(
         JSON.stringify({ data: context.get("payload"), update: context.get("update") })
@@ -101,7 +101,7 @@ describe("store option", () => {
         },
         payload: context.get("update"),
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       const afterResponse = await fastify.inject({
         method: "GET",
         url: "/session",

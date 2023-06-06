@@ -19,7 +19,7 @@ describe("secret option", () => {
         url: "/",
         payload: context.get("payload"),
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).toContain("set-cookie");
       expect(response.headers["set-cookie"]).toBeTruthy();
       // @ts-expect-error LightMyRequest.Response.cookies
@@ -34,7 +34,7 @@ describe("secret option", () => {
           cookie: context.get("cookie"),
         },
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).not.toContain("set-cookie");
       expect(response.payload).toEqual(JSON.stringify(context.get("payload")));
     });
@@ -58,7 +58,7 @@ describe("secret option", () => {
         url: "/",
         payload: context.get("payload"),
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).toContain("set-cookie");
       expect(response.headers["set-cookie"]).toBeTruthy();
       // @ts-expect-error LightMyRequest.Response.cookies
@@ -73,7 +73,7 @@ describe("secret option", () => {
           cookie: context.get("cookie"),
         },
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).not.toContain("set-cookie");
       expect(response.payload).toEqual(JSON.stringify(context.get("payload")));
     });

@@ -22,13 +22,13 @@ describe("cookie option", () => {
       url: "/",
       payload: context.get("payload"),
     });
-    expect(response.statusCode).toEqual(200);
+    expect(response.statusCode).toBe(200);
     expect(Object.keys(response.headers)).toContain("set-cookie");
     expect(response.headers["set-cookie"]).toBeTruthy();
     // @ts-expect-error LightMyRequest.Response.cookies
     expect(response.cookies[0].name).toEqual(DEFAULT_COOKIE_NAME);
     // @ts-expect-error LightMyRequest.Response.cookies
-    expect(response.cookies[0].domain).toEqual("example.com");
+    expect(response.cookies[0].domain).toBe("example.com");
     // @ts-expect-error LightMyRequest.Response.cookies
     expect(response.cookies[0].httpOnly).toBeTruthy();
     context.set("cookie", response.headers["set-cookie"]);
@@ -43,7 +43,7 @@ describe("cookie option", () => {
         cookie: context.get("cookie"),
       },
     });
-    expect(response.statusCode).toEqual(200);
+    expect(response.statusCode).toBe(200);
     expect(Object.keys(response.headers)).not.toContain("set-cookie");
     expect(response.payload).toEqual(JSON.stringify(context.get("payload")));
     expect(lastSessionId).toEqual(context.get("session").id);

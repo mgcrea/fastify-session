@@ -21,7 +21,7 @@ describe("key option", () => {
         url: "/",
         payload: context.get("payload"),
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).toContain("set-cookie");
       expect(response.headers["set-cookie"]).toBeTruthy();
       // @ts-expect-error LightMyRequest.Response.cookies
@@ -34,7 +34,7 @@ describe("key option", () => {
         url: "/noop",
         payload: context.get("payload"),
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).toContain("set-cookie");
       expect(response.headers["set-cookie"]).toBeTruthy();
       // @ts-expect-error LightMyRequest.Response.cookies
@@ -48,7 +48,7 @@ describe("key option", () => {
           cookie: context.get("cookie"),
         },
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).not.toContain("set-cookie");
       expect(response.payload).toEqual(JSON.stringify(context.get("payload")));
     });
@@ -61,7 +61,7 @@ describe("key option", () => {
         },
         payload: context.get("update"),
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).toContain("set-cookie");
       expect(response.headers["set-cookie"]).toBeTruthy();
       // @ts-expect-error LightMyRequest.Response.cookies
@@ -76,7 +76,7 @@ describe("key option", () => {
           cookie: context.get("cookie"),
         },
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).not.toContain("set-cookie");
       expect(response.payload).toEqual(
         JSON.stringify({ data: context.get("payload"), update: context.get("update") })
@@ -99,7 +99,7 @@ describe("key option", () => {
         url: "/",
         payload: context.get("payload"),
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).toContain("set-cookie");
       expect(response.headers["set-cookie"]).toBeTruthy();
       // @ts-expect-error LightMyRequest.Response.cookies
@@ -114,7 +114,7 @@ describe("key option", () => {
           cookie: context.get("cookie"),
         },
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).not.toContain("set-cookie");
       expect(response.payload).toEqual(JSON.stringify(context.get("payload")));
     });

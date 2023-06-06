@@ -16,11 +16,11 @@ describe("with malformed-cookie reply", () => {
       url: "/",
       payload: context.get("payload"),
     });
-    expect(response.statusCode).toEqual(200);
+    expect(response.statusCode).toBe(200);
     expect(Object.keys(response.headers)).toContain("set-cookie");
     expect(response.headers["set-cookie"]).toBeTruthy();
     // @ts-expect-error LightMyRequest.Response.cookies
-    expect(response.cookies[0].name).toEqual("foobar");
+    expect(response.cookies[0].name).toBe("foobar");
     context.set("cookie", response.cookies[0]);
   });
   it("should properly fail with a malformed cookie", async () => {
@@ -32,7 +32,7 @@ describe("with malformed-cookie reply", () => {
         cookie: "session=",
       },
     });
-    expect(response.statusCode).toEqual(404);
+    expect(response.statusCode).toBe(404);
     expect(Object.keys(response.headers)).toContain("set-cookie");
     expect(response.cookies[0]).not.toEqual(cookie);
   });
@@ -45,7 +45,7 @@ describe("with malformed-cookie reply", () => {
         [cookie.name]: cookie.value + "a".repeat(10),
       },
     });
-    expect(response.statusCode).toEqual(404);
+    expect(response.statusCode).toBe(404);
     expect(Object.keys(response.headers)).toContain("set-cookie");
     expect(response.cookies[0]).not.toEqual(cookie);
   });

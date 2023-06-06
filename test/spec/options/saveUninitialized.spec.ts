@@ -17,7 +17,7 @@ describe("saveUninitialized option", () => {
         url: "/noop",
         payload: context.get("payload"),
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).not.toContain("set-cookie");
     });
   });
@@ -36,11 +36,11 @@ describe("saveUninitialized option", () => {
         url: "/noop",
         payload: context.get("payload"),
       });
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).toContain("set-cookie");
       expect(response.headers["set-cookie"]).toBeTruthy();
       // @ts-expect-error LightMyRequest.Response.cookies
-      expect(response.cookies[0].name).toEqual("Session");
+      expect(response.cookies[0].name).toBe("Session");
       context.set("cookie", response.headers["set-cookie"]);
     });
   });
