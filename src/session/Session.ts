@@ -192,13 +192,13 @@ export class Session<T extends SessionData = SessionData> {
   }
 
   /**
-   * Delete the session. Only applicable for stateful sessions.
+   * Delete the session.
    */
   async destroy(): Promise<void> {
+    this.deleted = true;
     if (Session.#sessionCrypto.stateless) {
       return;
     }
-    this.deleted = true;
     // Only relay destroy to the store for existing sessions that have not been saved
     if (this.created && !this.saved) {
       return;
