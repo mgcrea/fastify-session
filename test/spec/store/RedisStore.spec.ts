@@ -79,7 +79,7 @@ describe("store option", () => {
       expect(response.statusCode).toBe(200);
       expect(Object.keys(response.headers)).not.toContain("set-cookie");
       expect(response.payload).toEqual(
-        JSON.stringify({ data: context.get("payload"), update: context.get("update") })
+        JSON.stringify({ data: context.get("payload"), update: context.get("update") }),
       );
     });
     it("should properly touch an existing session", async () => {

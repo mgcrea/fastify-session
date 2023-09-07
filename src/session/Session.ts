@@ -13,7 +13,7 @@ export const kCookieOptions = Symbol("kCookieOptions");
 export type SessionConfiguration = {
   cookieOptions?: CookieSerializeOptions;
   crypto?: SessionCrypto;
-  store?: SessionStore;
+  store?: SessionStore | undefined;
   secretKeys: Buffer[];
 };
 
@@ -80,12 +80,12 @@ export class Session<T extends SessionData = SessionData> {
    */
   static async create<T extends SessionData = SessionData>(
     data?: Partial<T>,
-    options: SessionOptions = {}
+    options: SessionOptions = {},
   ): Promise<Session> {
     if (!Session.#configured) {
       throw createError(
         "MissingConfiguration",
-        "Session is not configured. Please call Session.configure before creating a Session instance."
+        "Session is not configured. Please call Session.configure before creating a Session instance.",
       );
     }
     const session = new Session(data, options);
@@ -120,7 +120,7 @@ export class Session<T extends SessionData = SessionData> {
     } catch (error) {
       throw createError(
         "InvalidData",
-        "Failed to parse session data from cookie. Original error: ${error.message}"
+        "Failed to parse session data from cookie. Original error: ${error.message}",
       );
     }
     const session = await Session.create(data, { id: data.id });
@@ -160,7 +160,7 @@ export class Session<T extends SessionData = SessionData> {
    */
   async toCookie(): Promise<string> {
     const buffer = Buffer.from(
-      Session.#sessionCrypto.stateless ? JSON.stringify({ ...this.#sessionData, id: this.id }) : this.id
+      Session.#sessionCrypto.stateless ? JSON.stringify({ ...this.#sessionData, id: this.id }) : this.id,
     );
     if (!Session.#secretKeys[0]) {
       throw createError("MissingSecretKey", "Missing secret key for session encryption");

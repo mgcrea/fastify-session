@@ -21,7 +21,7 @@ export type FastifySessionOptions = {
 
 export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
   fastify,
-  options = {}
+  options = {},
 ): Promise<void> => {
   const {
     key,
@@ -67,7 +67,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
       request.session = await Session.create();
       log.debug(
         { ...bindings, sessionId: request.session.id },
-        "There was no cookie, created an empty session"
+        "There was no cookie, created an empty session",
       );
       return;
     }
@@ -80,7 +80,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
       request.session = await Session.create();
       log.warn(
         { ...bindings, err, sessionId: request.session.id },
-        `Failed to decode existing cookie, created an empty session`
+        `Failed to decode existing cookie, created an empty session`,
       );
       return;
     }
@@ -102,19 +102,19 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
       });
       log.debug(
         { ...bindings, sessionId: session.id },
-        `Deleted ${session.created ? "newly created" : "existing"} session`
+        `Deleted ${session.created ? "newly created" : "existing"} session`,
       );
       return;
     } else if (!saveUninitialized && session.isEmpty()) {
       log.debug(
         { ...bindings, sessionId: session.id },
-        "Created session is empty and won't be saved, leaving it as is"
+        "Created session is empty and won't be saved, leaving it as is",
       );
       return;
     } else if (!session.changed && !session.created && !session.rotated) {
       log.debug(
         { ...bindings, sessionId: session.id },
-        "The existing session was not changed, leaving it as is"
+        "The existing session was not changed, leaving it as is",
       );
       return;
     } else if (session.skipped) {
@@ -125,12 +125,12 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
     if (session.created || session.changed) {
       log.debug(
         { ...bindings, sessionId: session.id },
-        `About to save a ${session.created ? "created" : "changed"} session, saving ...`
+        `About to save a ${session.created ? "created" : "changed"} session, saving ...`,
       );
       await session.save();
       log.debug(
         { ...bindings, sessionId: session.id },
-        `${session.created ? "Created" : "Changed"} session successfully saved`
+        `${session.created ? "Created" : "Changed"} session successfully saved`,
       );
     }
     reply.setCookie(cookieName, await session.toCookie(), session.options);
