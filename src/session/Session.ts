@@ -220,6 +220,21 @@ export class Session<T extends SessionData = SessionData> {
     await Session.#sessionStore.set(this.id, this.#sessionData, this.#expiry);
   }
 
+  /**
+   * Reload the session data from the session store. Only applicable for stateful sessions.
+   */
+  async reload(): Promise<void> {
+    if (Session.#sessionCrypto.stateless) {
+      return;
+    }
+    // Reload session from store
+    assert(Session.#sessionStore);
+    const session = await Session.fromStatelessCookie(this.id, this.rotated);
+    // not sure what to reset here?
+    // this.#sessionData = session.#sessionData;
+    return;
+  }
+
   get data(): SessionData {
     return this.#sessionData;
   }
