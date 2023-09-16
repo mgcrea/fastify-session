@@ -6,3 +6,9 @@ declare module "fastify" {
     destroySession: () => Promise<void>;
   }
 }
+
+declare module "http" {
+  interface IncomingMessage {
+    session: Session;
+  }
+}
