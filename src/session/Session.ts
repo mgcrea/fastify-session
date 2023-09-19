@@ -1,6 +1,8 @@
 import type { CookieSerializeOptions } from "@fastify/cookie";
+import { FastifyRequest } from "fastify";
 import { nanoid } from "nanoid";
 import assert from "node:assert";
+import { IncomingMessage } from "node:http";
 import { HMAC } from "../crypto/Hmac";
 import type { SessionCrypto } from "../crypto/SessionCrypto";
 import { MEMORY_STORE, SessionStore } from "../store";
@@ -218,6 +220,29 @@ export class Session<T extends SessionData = SessionData> {
     // Save session to store with store-handled expiry
     assert(Session.#sessionStore);
     await Session.#sessionStore.set(this.id, this.#sessionData, this.#expiry);
+  }
+
+  /**
+   * Reload the session data from the session store. Only applicable for stateful sessions.
+   */
+  async reload(request: FastifyRequest | IncomingMessage): Promise<void> {
+    if (Session.#sessionCrypto.stateless) {
+      return;
+    }
+    // Reload session from store
+    assert(Session.#sessionStore);
+    const session = await Session.fromStatefulCookie(this.id, this.rotated);
+
+    this.#sessionData = session.#sessionData as Partial<T>;
+    this.#expiry = session.#expiry;
+    this.changed = session.changed;
+    this.deleted = session.deleted;
+    this.saved = session.saved;
+    this.skipped = session.skipped;
+    this.rotated = session.rotated;
+    request.session = session;
+
+    return;
   }
 
   get data(): SessionData {

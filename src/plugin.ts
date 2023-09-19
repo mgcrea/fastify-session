@@ -1,5 +1,7 @@
 import type { CookieSerializeOptions } from "@fastify/cookie";
+import { parse } from "cookie";
 import type { FastifyPluginAsync, FastifyRequest } from "fastify";
+import { IncomingMessage } from "http";
 import { HMAC, SessionCrypto, type SecretKey } from "./crypto";
 import { Session } from "./session";
 import type { SessionStore } from "./store";
@@ -17,6 +19,12 @@ export type FastifySessionOptions = {
   crypto?: SessionCrypto;
   saveUninitialized?: boolean;
   logBindings?: Record<string, unknown>;
+};
+
+export type cookie = {
+  name: string;
+  value: string;
+  options: CookieSerializeOptions;
 };
 
 export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
@@ -57,9 +65,54 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
   }
   fastify.decorateRequest("destroySession", destroySession);
 
+  // Allow sessions to be loaded to a request with cookies
+  fastify.decorate("loadSession", async (request: FastifyRequest | IncomingMessage) => {
+    let cookies: FastifyRequest["cookies"];
+    let log: FastifyRequest["log"];
+    if (request instanceof IncomingMessage) {
+      if (request.headers.cookie === undefined) return;
+
+      log = fastify.log;
+      cookies = parse(request.headers.cookie);
+    } else {
+      cookies = request.cookies;
+      log = request.log;
+    }
+
+    await decodeRequestCookie(request, cookies, log);
+  });
+
+  // Save a session to a cookie to manually set headers
+  fastify.decorate(
+    "encodeSession",
+    async (request: FastifyRequest | IncomingMessage): Promise<cookie | undefined> => {
+      let log = fastify.log;
+      if (!(request instanceof IncomingMessage)) {
+        log = request.log;
+      }
+
+      return await encodeSession(request, log);
+    },
+  );
+
   // decode/create a session for every request
   fastify.addHook("onRequest", async (request) => {
-    const { cookies, log } = request;
+    await decodeRequestCookie(request, request.cookies, request.log);
+  });
+
+  // encode a cookie
+  fastify.addHook("onSend", async (request, reply) => {
+    const cookie = await encodeSession(request, request.log);
+    if (cookie === undefined) return;
+
+    reply.setCookie(cookie.name, cookie.value, cookie.options);
+  });
+
+  async function decodeRequestCookie(
+    request: FastifyRequest | IncomingMessage,
+    cookies: FastifyRequest["cookies"],
+    log: FastifyRequest["log"],
+  ) {
     const bindings = { ...logBindings, hook: "onRequest" };
 
     const cookie = cookies[cookieName];
@@ -84,27 +137,33 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
       );
       return;
     }
-  });
+  }
 
-  // encode a cookie
-  fastify.addHook("onSend", async (request, reply) => {
-    const { session, log } = request;
+  async function encodeSession(
+    request: FastifyRequest | IncomingMessage,
+    log: FastifyRequest["log"],
+  ): Promise<cookie | undefined> {
+    const { session } = request;
     const bindings = { ...logBindings, hook: "onSend" };
 
     if (!session) {
       log.debug(bindings, "There was no session, leaving it as is");
       return;
     } else if (session.deleted) {
-      reply.setCookie(cookieName, "", {
-        ...session.options,
-        expires: new Date(0),
-        maxAge: 0,
-      });
       log.debug(
         { ...bindings, sessionId: session.id },
         `Deleted ${session.created ? "newly created" : "existing"} session`,
       );
-      return;
+
+      return {
+        name: cookieName,
+        value: "",
+        options: {
+          ...session.options,
+          expires: new Date(0),
+          maxAge: 0,
+        },
+      };
     } else if (!saveUninitialized && session.isEmpty()) {
       log.debug(
         { ...bindings, sessionId: session.id },
@@ -133,6 +192,10 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
         `${session.created ? "Created" : "Changed"} session successfully saved`,
       );
     }
-    reply.setCookie(cookieName, await session.toCookie(), session.options);
-  });
+    return {
+      name: cookieName,
+      value: await session.toCookie(),
+      options: session.options,
+    };
+  }
 };
