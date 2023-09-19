@@ -1,6 +1,8 @@
 import type { CookieSerializeOptions } from "@fastify/cookie";
+import { FastifyRequest } from "fastify";
 import { nanoid } from "nanoid";
 import assert from "node:assert";
+import { IncomingMessage } from "node:http";
 import { HMAC } from "../crypto/Hmac";
 import type { SessionCrypto } from "../crypto/SessionCrypto";
 import { MEMORY_STORE, SessionStore } from "../store";
@@ -223,15 +225,23 @@ export class Session<T extends SessionData = SessionData> {
   /**
    * Reload the session data from the session store. Only applicable for stateful sessions.
    */
-  async reload(): Promise<void> {
+  async reload(request: FastifyRequest | IncomingMessage): Promise<void> {
     if (Session.#sessionCrypto.stateless) {
       return;
     }
     // Reload session from store
     assert(Session.#sessionStore);
-    const session = await Session.fromStatelessCookie(this.id, this.rotated);
-    // not sure what to reset here?
-    // this.#sessionData = session.#sessionData;
+    const session = await Session.fromStatefulCookie(this.id, this.rotated);
+
+    this.#sessionData = session.#sessionData as Partial<T>;
+    this.#expiry = session.#expiry;
+    this.changed = session.changed;
+    this.deleted = session.deleted;
+    this.saved = session.saved;
+    this.skipped = session.skipped;
+    this.rotated = session.rotated;
+    request.session = session;
+
     return;
   }
 
