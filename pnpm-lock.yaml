@@ -12,7 +12,7 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
       nanoid:
-        specifier: 5.0.7
+        specifier: ^5.0.7
         version: 5.0.7
     devDependencies:
       '@fastify/cookie':
