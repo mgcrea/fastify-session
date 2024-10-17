@@ -13,8 +13,8 @@ describe("store option", () => {
     const fastify = buildFastify({
       session: { store: MEMORY_STORE, key: getRandomKey(), cookie: { maxAge: 60 } },
     });
-    afterAll(() => {
-      fastify.close();
+    afterAll(async () => {
+      await fastify.close();
     });
     it("should receive a cookie", async () => {
       const response = await fastify.inject({

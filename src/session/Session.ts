@@ -68,7 +68,7 @@ export class Session<T extends SessionData = SessionData> {
    */
   private constructor(data?: Partial<T>, options: SessionOptions = {}) {
     const { id = nanoid(), ...cookieOptions } = options;
-    this.#sessionData = data || {};
+    this.#sessionData = data ?? {};
     this.#cookieOptions = { ...Session.#globalCookieOptions, ...cookieOptions };
     this.id = id;
     this.created = !data;
@@ -116,11 +116,11 @@ export class Session<T extends SessionData = SessionData> {
   private static async fromStatelessCookie(payload: string, rotated: boolean): Promise<Session> {
     let data;
     try {
-      data = JSON.parse(payload);
+      data = JSON.parse(payload) as SessionData;
     } catch (error) {
       throw createError(
         "InvalidData",
-        "Failed to parse session data from cookie. Original error: ${error.message}",
+        `Failed to parse session data from cookie. Original error: ${String(error)}`,
       );
     }
     const session = await Session.create(data, { id: data.id });
@@ -158,6 +158,7 @@ export class Session<T extends SessionData = SessionData> {
    * Serialize the Session into a cookie.
    * The format of the cookie depends on whether the session is stateful or stateless.
    */
+  // eslint-disable-next-line @typescript-eslint/require-await
   async toCookie(): Promise<string> {
     const buffer = Buffer.from(
       Session.#sessionCrypto.stateless ? JSON.stringify({ ...this.#sessionData, id: this.id }) : this.id,

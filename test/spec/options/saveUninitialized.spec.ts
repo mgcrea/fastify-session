@@ -8,8 +8,8 @@ describe("saveUninitialized option", () => {
     const fastify = buildFastify({
       session: { saveUninitialized: false, key: getRandomKey() },
     });
-    afterAll(() => {
-      fastify.close();
+    afterAll(async () => {
+      await fastify.close();
     });
     it("should receive a cookie", async () => {
       const response = await fastify.inject({
@@ -27,8 +27,8 @@ describe("saveUninitialized option", () => {
     const fastify = buildFastify({
       session: { saveUninitialized: true, key: getRandomKey() },
     });
-    afterAll(() => {
-      fastify.close();
+    afterAll(async () => {
+      await fastify.close();
     });
     it("should receive a cookie", async () => {
       const response = await fastify.inject({

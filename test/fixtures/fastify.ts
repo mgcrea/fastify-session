@@ -37,14 +37,14 @@ export const buildFastify = (options: BuilfFastifyOptions = {}): FastifyInstance
     request.session.set("update", request.body);
     reply.send("hello world");
   });
-  fastify.post<{ Body: JsonObject }>("/touch", (request, reply) => {
-    request.session.touch();
+  fastify.post<{ Body: JsonObject }>("/touch", async (request, reply) => {
+    await request.session.touch();
     reply.send("hello world");
   });
-  fastify.get("/session", async (request) => {
+  fastify.get("/session", (request) => {
     return { id: request.session.id, data: request.session.data, expiry: request.session.expiry };
   });
-  fastify.post("/noop", async () => {
+  fastify.post("/noop", () => {
     return { ok: 1 };
   });
 

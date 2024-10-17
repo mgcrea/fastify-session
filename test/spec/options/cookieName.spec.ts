@@ -7,8 +7,8 @@ describe("cookieName option", () => {
   const fastify = buildFastify({
     session: { cookieName: "foobar", key: getRandomKey() },
   });
-  afterAll(() => {
-    fastify.close();
+  afterAll(async () => {
+    await fastify.close();
   });
   it("should receive a cookie", async () => {
     const response = await fastify.inject({

@@ -12,7 +12,7 @@ export abstract class SessionStore {
   abstract destroy(sid: string): Promise<void>;
 
   // Returns all sessions in the store
-  async all?(): Promise<SessionData[] | { [sid: string]: SessionData } | null>;
+  async all?(): Promise<SessionData[] | Record<string, SessionData> | null>;
 
   // Returns the amount of sessions in the store.
   async length?(): Promise<number>;

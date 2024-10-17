@@ -7,8 +7,8 @@ describe("with malformed-cookie reply", () => {
   const fastify = buildFastify({
     session: { cookieName: "foobar", key: getRandomKey() },
   });
-  afterAll(() => {
-    fastify.close();
+  afterAll(async () => {
+    await fastify.close();
   });
   it("should receive a cookie", async () => {
     const response = await fastify.inject({
@@ -42,7 +42,7 @@ describe("with malformed-cookie reply", () => {
       method: "GET",
       url: "/",
       headers: {
-        [cookie.name]: cookie.value + "a".repeat(10),
+        [cookie.name]: `${cookie.value}${"a".repeat(10)}`,
       },
     });
     expect(response.statusCode).toBe(404);

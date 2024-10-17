@@ -4,7 +4,7 @@ import { hmacFixture, secretKey } from "test/fixtures";
 import { describe, expect, it } from "vitest";
 
 describe("SodiumAuth", () => {
-  it("should properly sign a message", async () => {
+  it("should properly sign a message", () => {
     const message = Buffer.from(JSON.stringify({ hello: "world" }));
     const signed = HMAC.sealMessage(message, secretKey);
     expect(signed).toBeDefined();
@@ -13,7 +13,7 @@ describe("SodiumAuth", () => {
     expect(signed.split(CRYPTO_SPLIT_CHAR).length).toBe(2);
   });
 
-  it("should properly verify a signed message", async () => {
+  it("should properly verify a signed message", () => {
     const result = HMAC.unsealMessage(hmacFixture, [secretKey]);
     expect(result).toBeDefined();
     expect(typeof result).toBe("object");

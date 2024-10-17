@@ -10,8 +10,8 @@ describe("secret option", () => {
     const fastify = buildFastify({
       session: { secret: "a secret with minimum length of 32 characters" },
     });
-    afterAll(() => {
-      fastify.close();
+    afterAll(async () => {
+      await fastify.close();
     });
     it("should receive a cookie", async () => {
       const response = await fastify.inject({
@@ -49,8 +49,8 @@ describe("secret option", () => {
         salt: generateSalt().toString("base64"),
       },
     });
-    afterAll(() => {
-      fastify.close();
+    afterAll(async () => {
+      await fastify.close();
     });
     it("should receive a cookie", async () => {
       const response = await fastify.inject({

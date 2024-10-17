@@ -4,9 +4,9 @@ import { DEFAULT_COOKIE_NAME } from "src/plugin";
 import { buildFastify, getRandomKey, waitFor } from "test/fixtures";
 import { afterAll, describe, expect, it } from "vitest";
 
-const REDIS_PORT = process.env["REDIS_PORT"] || 6379;
-const REDIS_HOST = process.env["REDIS_HOST"] || "localhost";
-const REDIS_URI = process.env["REDIS_URI"] || `redis://${REDIS_HOST}:${REDIS_PORT}/1`;
+const REDIS_PORT = process.env["REDIS_PORT"] ?? 6379;
+const REDIS_HOST = process.env["REDIS_HOST"] ?? "localhost";
+const REDIS_URI = process.env["REDIS_URI"] ?? `redis://${REDIS_HOST}:${REDIS_PORT}/1`;
 
 describe("store option", () => {
   describe("with a RedisStore", () => {
@@ -23,8 +23,8 @@ describe("store option", () => {
         cookie: { maxAge: 60 },
       },
     });
-    afterAll(() => {
-      fastify.close();
+    afterAll(async () => {
+      await fastify.close();
       redisClient.disconnect();
     });
     it("should receive a cookie", async () => {

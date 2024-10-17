@@ -1,12 +1,11 @@
 import { SODIUM_AUTH, SODIUM_SECRETBOX } from "@mgcrea/fastify-session-sodium-crypto";
-import benchmark from "benchmark";
+import benchmark, { Suite } from "benchmark";
 import { HMAC } from "src";
 import { secretKey } from "test/fixtures";
 
-const { Suite } = benchmark;
 const jsonMessage = Buffer.from(JSON.stringify({ hello: "world" }));
 
-new Suite()
+new benchmark.Suite()
   .add("SODIUM_SECRETBOX#sealJson", function () {
     SODIUM_SECRETBOX.sealMessage(jsonMessage, secretKey);
   })
@@ -20,9 +19,9 @@ new Suite()
   .on("cycle", function (event: Event) {
     console.log(String(event.target));
   })
-  .on("complete", function () {
-    // @ts-expect-error this
-    console.log("Fastest is " + this.filter("fastest").map("name"));
+  .on("complete", function (this: Suite) {
+    const fastest = this.filter("fastest").map("name");
+    console.log(`Fastest is ${fastest[0]}`);
   })
   // run async
   .run({ async: true });

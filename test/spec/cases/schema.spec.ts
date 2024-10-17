@@ -8,8 +8,8 @@ describe("with fastify path", () => {
   const fastify = buildFastify({
     session: { key: getRandomKey() },
   });
-  afterAll(() => {
-    fastify.close();
+  afterAll(async () => {
+    await fastify.close();
   });
   it("should receive a cookie", async () => {
     const response = await fastify.inject({

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/require-await */
+
 import { EventEmitter } from "events";
 import type { SessionData, SessionStore } from "./SessionStore";
 
@@ -44,11 +46,11 @@ export class MemoryStore<T extends SessionData = SessionData> extends EventEmitt
       return;
     }
     const [session] = sessionData;
-    this.set(sessionId, session, expiry);
+    await this.set(sessionId, session, expiry);
   }
 
-  async all(): Promise<{ [sid: string]: SessionData }> {
-    return [...this.store.entries()].reduce<{ [sid: string]: SessionData }>((soFar, [k, v]) => {
+  async all(): Promise<Record<string, SessionData>> {
+    return [...this.store.entries()].reduce<Record<string, SessionData>>((soFar, [k, v]) => {
       soFar[k] = v[0];
       return soFar;
     }, {});

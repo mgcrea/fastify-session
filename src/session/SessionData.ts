@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import type { JsonObject } from "src/typings";
 
 /**
@@ -12,4 +13,6 @@ import type { JsonObject } from "src/typings";
  * }
  *
  */
-export interface SessionData extends JsonObject {} // eslint-disable-line @typescript-eslint/no-empty-interface
+export interface SessionData extends JsonObject {
+  id?: string; // required for stateless sessions
+}

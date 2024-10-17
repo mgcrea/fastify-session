@@ -8,13 +8,14 @@ describe("cookie option", () => {
   const fastify = buildFastify({
     session: { cookie: { domain: "example.com", httpOnly: true }, key: getRandomKey() },
   });
+  // eslint-disable-next-line @typescript-eslint/require-await
   fastify.addHook("onSend", async (request) => {
     if (context) {
       context.set("session", request.session);
     }
   });
-  afterAll(() => {
-    fastify.close();
+  afterAll(async () => {
+    await fastify.close();
   });
   it("should receive a cookie", async () => {
     const response = await fastify.inject({
@@ -33,7 +34,7 @@ describe("cookie option", () => {
     expect(response.cookies[0].httpOnly).toBeTruthy();
     context.set("cookie", response.headers["set-cookie"]);
     context.set("sessionId", response.headers["set-cookie"]);
-  });
+  }, 500);
   it("should properly match an existing session", async () => {
     const lastSessionId = context.get("session").id;
     const response = await fastify.inject({

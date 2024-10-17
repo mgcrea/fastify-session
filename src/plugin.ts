@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import type { CookieSerializeOptions } from "@fastify/cookie";
 import type { FastifyPluginAsync, FastifyRequest } from "fastify";
 import { HMAC, SessionCrypto, type SecretKey } from "./crypto";
@@ -48,7 +49,8 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
   const secretKeys: Buffer[] = crypto.deriveSecretKeys(key, secret, salt);
   Session.configure({ cookieOptions, secretKeys, store, crypto });
 
-  fastify.decorateRequest("session", null);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  fastify.decorateRequest("session", null!);
   async function destroySession(this: FastifyRequest) {
     if (!this.session) {
       return;
@@ -71,6 +73,7 @@ export const plugin: FastifyPluginAsync<FastifySessionOptions> = async (
       );
       return;
     }
+
     try {
       log.debug(bindings, "Found an existing cookie, attempting to decode session ...");
       request.session = await Session.fromCookie(cookie);
