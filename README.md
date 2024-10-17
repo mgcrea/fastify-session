@@ -30,7 +30,7 @@ Session plugin for [fastify](https://github.com/fastify/fastify) that supports b
 
 - Requires [@fastify/cookie](https://github.com/fastify/fastify-cookie) to handle cookies.
 
-- Works with [fastify](https://github.com/fastify/fastify) `^4.0.0` starting from `>=0.16.0`.
+- Works with [fastify](https://github.com/fastify/fastify) `>=4.0.0`.
 
 - Can leverage crypto addons like
   [@mgcrea/fastify-session-sodium-crypto](https://github.com/mgcrea/fastify-session-sodium-crypto) to perform crypto.
