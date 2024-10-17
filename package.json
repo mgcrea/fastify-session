@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "fastify-plugin": "^5.0.1",
-    "nanoid": "5.0.7"
+    "nanoid": "^5.0.7"
   },
   "devDependencies": {
     "@fastify/cookie": "^11.0.1",
